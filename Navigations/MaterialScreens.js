@@ -12,7 +12,7 @@ const MaterialScreens = () => {
         <MaterialTab.Navigator
             initialRouteName="inReturn"
             activeColor="white"
-            barStyle={{ backgroundColor: '#F2808A' }}
+            barStyle={{ backgroundColor: Expo.Constants.manifest.extra.COLOR }}
         >
             {/* #9AC4F8 */}
             {/* F2808A */}

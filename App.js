@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Button, Text, View } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import {MaterialScreens} from "./Navigations/MaterialScreens";
+import { AuthStackNavigator } from "./Navigations/StackNavigation";
+import { MaterialScreens } from "./Navigations/MaterialScreens";
+import { LogBox } from 'react-native'
+LogBox.ignoreAllLogs();
+
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -15,16 +17,16 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {/* {token ? <StackScreen /> : <AuthStackScreen />} */}
-      {/* <TabNavigation></TabNavigation> */}
-      {/* <StackScreens></StackScreens> */}
-      <MaterialScreens></MaterialScreens>
+      <AuthStackNavigator/>
+      {/* <MaterialScreens /> */}
+      
+
     </NavigationContainer>
   );
 }
 
 
 const styles = StyleSheet.create({
-  
+
 
 });

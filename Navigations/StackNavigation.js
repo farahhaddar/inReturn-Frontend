@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 const screenOptionStyle = {
     headerStyle: {
         
-        backgroundColor: "#F2808A",
+        backgroundColor: Expo.Constants.manifest.extra.COLOR,
     },
     headerTintColor: "white",
     headerBackTitle: "Back",
@@ -25,7 +25,7 @@ const screenOptionStyle = {
 
 const HomeStackNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={screenOptionStyle}>
+        <Stack.Navigator  screenOptions={screenOptionStyle}>
             <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
     );
@@ -54,8 +54,9 @@ const UserStackNavigator = () => {
 };
 const AuthStackNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={screenOptionStyle}>
-            <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Navigator screenOptions={{
+            headerShown: false }}>
+            {/* <Stack.Screen name="Splash" component={Splash} /> */}
             <Stack.Screen name="LogIn" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
