@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
     View,
     Text,
@@ -15,268 +15,224 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { navigation } from "react-native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
+export default class ResetPassword extends Component {
 
-const ResetPassword = ({ navigation }) => {
-
-    const [data, setData] = React.useState({
-        email: '',
-        password: '',
-        check_textInputChange: false,
-        secureTextEntry: true,
-        secureTextEntryConfirm:true,
-    });
-
-    // email
-    const textInputChange = (val) => {
-        if (val.trim().length !== 0) {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: true,
-            });
-        } else {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: false,
-
-            });
-        }
+    constructor(props) {
+        super(props);
+        this.state = {
+            secureTextEntry: true,
+            secureTextEntryConfirm: true,
+        };
     }
-    //  password
-    const handlePasswordChange = (val) => {
-        if (val.trim().length >= 8) {
-            setData({
-                ...data,
-                password: val,
 
-            });
-        } else {
-            setData({
-                ...data,
-                password: val,
 
-            });
-        }
-    }
 
     // toggle
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
+    updateSecureTextEntry = (e) => {
+        this.setState({
+            secureTextEntry: !this.state.secureTextEntry
         });
     }
-    const updateSecureTextEntryConfirm = () => {
-        setData({
-            ...data,
-            secureTextEntryConfirm: !data.secureTextEntryConfirm
+    updateSecureTextEntryConfirm = (e) => {
+        this.setState({
+            secureTextEntryConfirm: !this.state.secureTextEntryConfirm
         });
     }
 
 
-    return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
-            <View style={styles.header}>
-                <Text style={styles.text_header}> Reset Your Password</Text>
+    render() {
+        return (
+            <View style={styles.container}>
+                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <View style={styles.header}>
+                    <Text style={styles.text_header}> Reset Your Password</Text>
+                </View>
+
+
+                <Animatable.View
+                    animation="fadeInUpBig"
+                    style={styles.footer}>
+
+                    <SafeAreaView>
+
+                        <ScrollView>
+
+                            {/* email */}
+                            < Text style={styles.text_footer}>Email </Text>
+
+                            <View style={styles.action}>
+
+                                <MaterialIcons
+                                    name="email"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    placeholder="Johne@example.com"
+                                    placeholderTextColor="#666666"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                />
+
+                            </View>
+
+                            {/* Pin Code  */}
+                            <Text
+                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                Pin Code
+                            </Text>
+
+                            <View style={styles.action}>
+                                <FontAwesome
+                                    name="key"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    placeholder="Pin Code...."
+                                    placeholderTextColor="#666666"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                />
+                            </View>
+
+
+
+
+                            {/* pass */}
+
+                            <Text style={[styles.text_footer, { marginTop: 35 }]}>
+                                Password
+                            </Text>
+
+                            <View style={styles.action}>
+                                <MaterialIcons
+                                    name="lock"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    placeholder="8 character password"
+                                    placeholderTextColor="#666666"
+                                    secureTextEntry={this.state.secureTextEntry ? true : false}
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+
+                                />
+                                <TouchableOpacity
+                                    onPress={this.updateSecureTextEntry}
+                                >
+                                    {this.state.secureTextEntry ?
+                                        <Feather
+                                            name="eye-off"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                        :
+                                        <Feather
+                                            name="eye"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                    }
+                                </TouchableOpacity>
+
+
+
+                            </View>
+
+
+
+
+
+
+                            {/* confirm Pass */}
+
+
+                            <Text
+                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                Confirm Password
+                           </Text>
+
+                            <View style={styles.action}>
+                                <MaterialIcons
+                                    name="lock"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    placeholder="8 character password"
+                                    placeholderTextColor="#666666"
+                                    secureTextEntry={this.state.secureTextEntryConfirm ? true : false}
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+
+                                />
+                                <TouchableOpacity
+                                    onPress={this.updateSecureTextEntryConfirm}
+                                >
+                                    {this.state.secureTextEntryConfirm ?
+                                        <Feather
+                                            name="eye-off"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                        :
+                                        <Feather
+                                            name="eye"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                    }
+                                </TouchableOpacity>
+
+
+                            </View>
+
+
+
+
+
+                            {/* Button */}
+
+                            <View style={styles.button}>
+                                <LinearGradient
+                                    colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                    style={styles.signIn}
+                                >
+                                    <Text style={[styles.textSign, {
+                                        color: '#fff'
+                                    }]}> Rest Now</Text>
+                                </LinearGradient>
+
+                            </View>
+
+
+                        </ScrollView>
+                    </SafeAreaView>
+                </Animatable.View>
             </View>
-
-
-            <Animatable.View
-                animation="fadeInUpBig"
-
-                style={styles.footer}>
-                <SafeAreaView>
-                <ScrollView>
-
-                {/* email */}
-                < Text style={[styles.text_footer, {
-
-                }]}>Email</Text>
-                <View style={styles.action}>
-                    <FontAwesome
-                        name="envelope-o"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-
-                    <TextInput
-                        placeholder="Email ...."
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
-                    />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
-
-                </View>
-
-
-                {/* Pin Code  */}
-                <Text style={[styles.text_footer, {
-                    marginTop: 35
-                }]}>Pin Code</Text>
-                <View style={styles.action}>
-                    <FontAwesome
-                        name="key"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-
-                    <TextInput
-                        placeholder="Pin Code...."
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
-                    />
-                    
-                      
-
-                </View>
-
-
-                {/* pass */}
-
-                <Text style={[styles.text_footer, {
-                    // color: colors.text,
-                    marginTop: 35
-                }]}>Password</Text>
-
-                <View style={styles.action}>
-                    <Feather
-                        name="lock"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-
-                    <TextInput
-                        placeholder="Password...."
-                        placeholderTextColor="#666666"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={updateSecureTextEntry}
-                    >
-                        {data.secureTextEntry ?
-                            <Feather
-                                name="eye-off"
-                                color="grey"
-                                size={20}
-                            />
-                            :
-                            <Feather
-                                name="eye"
-                                color="grey"
-                                size={20}
-                            />
-                        }
-                    </TouchableOpacity>
-
-                    
-
-                </View>
-
-                
-              
-                 
-
-
-{/* confirm Pass */}
-
-
-                <Text style={[styles.text_footer, {
-                    marginTop: 35
-                }]}> Confirm Password</Text>
-
-                <View style={styles.action}>
-                    <Feather
-                        name="lock"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-
-                    <TextInput
-                        placeholder="Password...."
-                        placeholderTextColor="#666666"
-                        secureTextEntry={data.secureTextEntryConfirm ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={updateSecureTextEntryConfirm}
-                    >
-                        {data.secureTextEntryConfirm ?
-                            <Feather
-                                name="eye-off"
-                                color="grey"
-                                size={20}
-                            />
-                            :
-                            <Feather
-                                name="eye"
-                                color="grey"
-                                size={20}
-                            />
-                        }
-                    </TouchableOpacity>
-
-
-
-                </View>
-
-
-
-
-
-{/* end */}
+        )
+    }
+}
 
 
 
 
 
 
-                <View style={styles.button}>
-                    <LinearGradient
-                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
-                        style={styles.signIn}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: '#fff'
-                        }]}> Rest Now</Text>
-                    </LinearGradient>
-
-                  
-                 
 
 
-                </View>
-           </ScrollView>
-            </SafeAreaView>
-            </Animatable.View>
 
-        </View>
-    );
-};
 
-export default ResetPassword;
 
 const styles = StyleSheet.create({
     container: {

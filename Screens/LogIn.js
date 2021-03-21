@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
     View,
     Text,
@@ -15,201 +15,243 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { navigation } from "react-native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// import { useTheme } from 'react-native-paper';
+export default class LogIn extends Component {
 
-// import { AuthContext } from '../components/context';
-
-// import Users from '../model/users';
-
-const LogIn = ({ navigation }) => {
-
-    const [data, setData] = React.useState({
-        email: '',
-        password: '',
-        check_textInputChange: false,
-        secureTextEntry: true,
-    });
-
-    // email
-    const textInputChange = (val) => {
-        if (val.trim().length !== 0) {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: true,
-            });
-        } else {
-            setData({
-                ...data,
-               email: val,
-                check_textInputChange: false,
-               
-            });
-        }
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: "",
+            password: "",
+            secureTextEntry: true,
+            error: "",
+        };
     }
-//  password
-    const handlePasswordChange = (val) => {
-        if (val.trim().length >= 8) {
-            setData({
-                ...data,
-                password: val,
-    
-            });
-        } else {
-            setData({
-                ...data,
-                password: val,
-                
-            });
-        }
-    }
+
+
+    onChangeValue = (name, text) => {
+        this.setState({ [name]: text });
+    };
 
     // toggle
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
+    updateSecureTextEntry = (e) => {
+        this.setState({
+            secureTextEntry: !this.state.secureTextEntry
         });
     }
 
 
-    return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
-            <View style={styles.header}>
-                <Text style={styles.text_header}> WELCOME :)</Text>
-                <Text style={styles.text_header_Slog}> Please Log In !</Text>
+    onSubmit = async (e) => {
+        e.preventDefault();
 
-            </View>
+        const request = await fetch("http://192.168.0.105:8000/api/login", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                password: this.state.password,
+            }),
+        });
+       
+        const response = await request.json();
+        const result = request.status;
+        if (result == 200) {
 
-
-            <Animatable.View
-                animation="fadeInUpBig"
+            const storeData = async () => {
+                const token = response.access_token;
+                const user = JSON.stringify(response.user);
+                try {
+                    await AsyncStorage.setItem("token", token);
+                    await AsyncStorage.setItem("user", user);
+                    this.props.setToken(true);
             
-            style={styles.footer}>
-               
-                <SafeAreaView>
-             <ScrollView>
-
-             {/* email */}
-               < Text style={[styles.text_footer, {
-                    
-                }]}>Email</Text>
-            <View style={styles.action}>
-                <FontAwesome
-                        name="envelope-o"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                    size={20}
-                />
-                    
-                <TextInput
-                    placeholder="Email ...."
-                    placeholderTextColor="#666666"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => textInputChange(val)}
-                />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
-
-             </View>
+                } catch (e) {
+                    alert("Faild To Log In ")
+                    console.log(e);
+                }
+            };
+            storeData();
+            const store = await AsyncStorage.getItem("token");
+            console.log(store);
+        } else {
+            alert("You are not authorized to login !");
+            this.setState({ error:response.error})
+        }
+    };
 
 
-{/* pass */}
 
-                <Text style={[styles.text_footer, {
-                    // color: colors.text,
-                    marginTop: 35
-                }]}>Password</Text>
-                <View style={styles.action}>
-                    <Feather
-                        name="lock"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-                    
-                    <TextInput
-                        placeholder="Password...."
-                        placeholderTextColor="#666666"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={updateSecureTextEntry}
-                    >
-                        {data.secureTextEntry ?
-                            <Feather
-                                name="eye-off"
-                                color="grey"
-                                size={20}
-                            />
-                            :
-                            <Feather
-                                name="eye"
-                                color="grey"
-                                size={20}
-                            />
-                        }
-                    </TouchableOpacity>
 
+
+
+
+
+
+
+
+
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <View style={styles.header}>
+                    <Text style={styles.text_header}>WELCOME !</Text>
+                    <Text style={styles.text_header_Slog}> Alot Of Old Stuff ??  </Text>
+                    <Text style={styles.text_header_Slog}> Login And Exchnage It With New Things !! </Text>
                 </View>
-                
-                    <View style={styles.button}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('ForgotPassword')}
-                        style={styles.signIn}
-                    >
-                        <LinearGradient
-                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
-                        style={styles.signIn}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff'
-                            }]}>Sign In</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('ForgotPassword')}
-                    >
-                        <Text style={{ color: 'grey', marginTop: 10 }}>Forgot  Your Password?</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('SignUp')}
-                        style={[styles.signIn, {
-                            borderColor: Expo.Constants.manifest.extra.COLOR,
-                            borderWidth: 1,
-                            marginTop: 15
-                        }]}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: Expo.Constants.manifest.extra.COLOR,
-                        }]}>Sign Up</Text>
-                    </TouchableOpacity>
 
 
-                 </View>
+                <Animatable.View
+                    animation="fadeInUpBig"
+                    style={styles.footer}>
 
-               </ScrollView>
-               </SafeAreaView>
-              </Animatable.View>
-            
+                    <SafeAreaView>
+
+                        <ScrollView>
+                              
+
+                            <Text>{this.state.error}</Text>
+                            
+                            {/* email */}
+                            < Text style={styles.text_footer}>Email </Text>
+
+                            <View style={styles.action}>
+
+                                <MaterialIcons
+                                    name="email"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    onChangeText={(text) => this.onChangeValue("email", text)}
+                                    placeholder="Johne@example.com"
+                                    placeholderTextColor="#666666"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+
+                                />
+
+                            </View>
+
+
+
+                            {/* pass */}
+
+                            <Text style={[styles.text_footer, { marginTop: 35 }]}>
+                                Password
+                            </Text>
+
+                            <View style={styles.action}>
+                                <MaterialIcons
+                                    name="lock"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    onChangeText={(text) => this.onChangeValue("password", text)}
+                                    placeholder="8 character password"
+                                    placeholderTextColor="#666666"
+                                    secureTextEntry={this.state.secureTextEntry ? true : false}
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+
+                                />
+                                <TouchableOpacity
+                                    onPress={this.updateSecureTextEntry}
+                                >
+                                    {this.state.secureTextEntry ?
+                                        <Feather
+                                            name="eye-off"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                        :
+                                        <Feather
+                                            name="eye"
+                                            color="grey"
+                                            size={20}
+                                        />
+                                    }
+                                </TouchableOpacity>
+
+
+
+                            </View>
+
+
+                            {/* button */}
+
+                            <View style={styles.button}>
+
+                                {/* login */}
+                                <TouchableOpacity
+    
+                                    onPress={(e) => this.onSubmit(e)}
+                                    style={styles.signIn}
+                                >
+                                    <LinearGradient
+                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                        style={styles.signIn}
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}>Sign In</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+
+                                {/* forget password */}
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('ForgotPassword')}
+                                >
+                                    <Text style={{ color: 'grey', marginTop: 10 }}>Forgot  Your Password?</Text>
+                                </TouchableOpacity>
+
+                                {/* signup */}
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('SignUp')}
+                                    style={[styles.signIn, {
+                                        borderColor: Expo.Constants.manifest.extra.COLOR,
+                                        borderWidth: 1,
+                                        marginTop: 15
+                                    }]}
+                                >
+                                    <Text style={[styles.textSign, {
+                                        color: Expo.Constants.manifest.extra.COLOR,
+                                    }]}>Sign Up</Text>
+                                </TouchableOpacity>
+
+
+                            </View>
+
+
+
+
+                        </ScrollView>
+                    </SafeAreaView>
+                </Animatable.View>
             </View>
-           );
-};
+        )
+    }
+}
 
-export default LogIn;
+
+
+
+
+
+
+
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -233,17 +275,17 @@ const styles = StyleSheet.create({
     text_header: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30
-    },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 18
+        fontSize: 28
     },
     text_header_Slog: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 16,
-        marginTop: 30
+        fontSize: 15,
+        marginTop: 3
+    },
+    text_footer: {
+        color: '#05375a',
+        fontSize: 18
     },
     action: {
         flexDirection: 'row',
@@ -271,7 +313,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 30
     },
     signIn: {
         width: '100%',

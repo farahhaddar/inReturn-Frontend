@@ -1,151 +1,139 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
     View,
     Text,
     TouchableOpacity,
     TextInput,
     Platform,
+    SafeAreaView,
+    ScrollView,
     StyleSheet,
     StatusBar,
-    Alert,
-    SafeAreaView,
-    ScrollView
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { navigation } from "react-native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
+export default class LogIn extends Component {
 
-
-
-const ForgotPassword = ({ navigation }) => {
-
-    const [data, setData] = React.useState({
-        email: '',
-        password: '',
-        check_textInputChange: false,
-        secureTextEntry: true,
-    });
-
-    // email
-    const textInputChange = (val) => {
-        if (val.trim().length !== 0) {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: true,
-            });
-        } else {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: false,
-
-            });
-        }
-    }
-    
-
-
-
-    return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
-            <View style={styles.header}>
-                <Text style={styles.text_header}> Forgot Your Password ?</Text>
-                <Text style={styles.text_header_Slog}> Don't Worry ! We Got Your Back :)</Text>
-            </View>
-
-
-            <Animatable.View
-                animation="fadeInUpBig"
-
-                style={styles.footer}>
-
-               < SafeAreaView>
-               <ScrollView>
-
-                {/* email */}
-                < Text style={[styles.text_footer, {
-
-                }]}>Email</Text>
-                <View style={styles.action}>
-                    <FontAwesome
-                        name="envelope-o"
-                        color={Expo.Constants.manifest.extra.COLOR}
-                        size={20}
-                    />
-
-                    <TextInput
-                        placeholder="Email ...."
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
-                    />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
-
-                </View>
-
-
-               
+    constructor(props) {
+        super(props);
+        this.state = {
             
+        };
+    }
 
-                <View style={styles.button}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('ResetPassword')}
-                        style={styles.signIn}
-                        >
-                       
-                    <LinearGradient
-                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
-                        
-                            style={styles.signIn}
+   
 
-                    >
-                        <Text style={[styles.textSign, {
-                            color: '#fff'
-                        }]}>Send Email</Text>
-                    </LinearGradient>
-                    </TouchableOpacity>
-                  
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('LogIn')}
-                        style={[styles.signIn, {
-                            borderColor: Expo.Constants.manifest.extra.COLOR,
-                            borderWidth: 1,
-                            marginTop: 15
-                        }]}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: Expo.Constants.manifest.extra.COLOR,
-                        }]}>Sign In</Text>
-                    </TouchableOpacity>
-
-
+    render() {
+        return (
+            <View style={styles.container}>
+                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <View style={styles.header}>
+                    <Text style={styles.text_header}> Forgot Your Password ?</Text>
+                    <Text style={styles.text_header_Slog}> Don't Worry ! We Got Your Back :)</Text>
                 </View>
-             
-             </ScrollView>
-             </SafeAreaView>
 
-            </Animatable.View>
 
-        </View>
-    );
-};
+                <Animatable.View
+                    animation="fadeInUpBig"
+                    style={styles.footer}>
 
-export default ForgotPassword;
+                    <SafeAreaView>
+
+                        <ScrollView>
+
+
+                            {/* email */}
+                            < Text style={styles.text_footer}>Email </Text>
+
+                            <View style={styles.action}>
+
+                                <MaterialIcons
+                                    name="email"
+                                    color={Expo.Constants.manifest.extra.COLOR}
+                                    size={20}
+                                />
+
+                                <TextInput
+                                    placeholder="Johne@example.com"
+                                    placeholderTextColor="#666666"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                />
+
+                            </View>
+
+
+                            {/* button */}
+
+                            <View style={styles.button}>
+                                
+
+                            {/* Send in email */}
+
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('ResetPassword')}
+                                    style={styles.signIn}
+                                >
+
+                                    <LinearGradient
+                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+
+                                        style={styles.signIn}
+
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}>Send Email</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('LogIn')}
+                                    style={[styles.signIn, {
+                                        borderColor: Expo.Constants.manifest.extra.COLOR,
+                                        borderWidth: 1,
+                                        marginTop: 15
+                                    }]}
+                                >
+                                    <Text style={[styles.textSign, {
+                                        color: Expo.Constants.manifest.extra.COLOR,
+                                    }]}>Sign In</Text>
+                                </TouchableOpacity>
+
+                                
+                                
+ 
+                              
+
+
+                            </View>
+
+
+
+
+                        </ScrollView>
+                    </SafeAreaView>
+                </Animatable.View>
+            </View>
+        )
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -174,8 +162,8 @@ const styles = StyleSheet.create({
     text_header_Slog: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 15,
-        marginTop:30
+        fontSize: 16,
+        marginTop: 5
     },
     text_footer: {
         color: '#05375a',
@@ -183,10 +171,10 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 0
+        paddingBottom: 5
     },
     actionError: {
         flexDirection: 'row',

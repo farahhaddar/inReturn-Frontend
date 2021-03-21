@@ -1,25 +1,31 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Button, Text, View } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthStackNavigator } from "./Navigations/StackNavigation";
 import { MaterialScreens } from "./Navigations/MaterialScreens";
 import { LogBox } from 'react-native'
 LogBox.ignoreAllLogs();
-
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
 export default function App() {
 
+  const [token, setToken] = useState(null);
 
+  useEffect(() => {
+
+   token = () => {  AsyncStorage.getItem(token) }
+
+  }, [])
+  
   return (
     <NavigationContainer>
-      <AuthStackNavigator/>
-      {/* <MaterialScreens /> */}
-      
+
+      {token ? <MaterialScreens  /> : <AuthStackNavigator  />}
+     
+
 
     </NavigationContainer>
   );
