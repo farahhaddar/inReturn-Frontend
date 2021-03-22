@@ -5,6 +5,9 @@ import {
     TouchableOpacity,
     TextInput,
     Platform,
+    Dimensions,
+    Modal,
+    ActivityIndicator,
     SafeAreaView,
     ScrollView,
     StyleSheet,
@@ -18,17 +21,34 @@ import Feather from 'react-native-vector-icons/Feather';
 import { navigation } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
+const width = Dimensions.get("window").width;
 
 export default class ResetPassword extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            isLoading:false,
+            show:false,
+            successMessage:"",
+            email:"",
+            password:'',
+            passwordConfirm:"",
+            token:"",
+            emailErr:"",
+            passwordErr:"",
+            tokenErr:"",
+            passwordConfirmErr: "",
             secureTextEntry: true,
             secureTextEntryConfirm: true,
         };
     }
 
+
+    // on change of inputs setState
+    onChangeValue = (name, text) => {
+        this.setState({ [name]: text });
+    };
 
 
     // toggle
@@ -44,10 +64,189 @@ export default class ResetPassword extends Component {
     }
 
 
+
+    onSubmit = async (e) => {
+
+        e.preventDefault();
+        this.setState({ isLoading: true })
+
+    
+        if (this.state.password !== this.state.passwordConfirm) {
+            this.setState({ passwordErr: "", emailErr: "" ,tokenErr:"" })
+
+            this.setState({ passwordConfirmErr: "Your password must match !" });
+        } else {
+            try {
+
+                fetch(Expo.Constants.manifest.extra.API_URL +"reset", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+
+                        email: this.state.email,
+                        password: this.state.password,
+                       token:this.state.token
+                    }),
+                }).then((response) => response.text())
+                    .then((res) => {
+                        
+                        this.setState({isLoading:false})
+                        if (JSON.parse(res).status == 200) {
+                            this.setState({ show: true,isloading:false, tokenErr: "", passwordErr: "", emailErr: "", successMessage:JSON.parse(res).data })
+                        } else {
+
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.email &&
+                                JSON.parse(res).error.message.email[0] &&
+                                this.setState({ emailErr: JSON.parse(res).error.message.email[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.password &&
+                                JSON.parse(res).error.message.password[0] &&
+                                this.setState({ passwordErr: JSON.parse(res).error.message.password[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.token &&
+                                JSON.parse(res).error.message.token[0] &&
+                                this.setState({ tokenErr: JSON.parse(res).error.message.token[0] });
+
+                         }
+
+                    });
+
+
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+
+    };
+
+
     render() {
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                
+               
+                <Modal
+                    transparent
+                    visible={this.state.isLoading}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <ActivityIndicator size="large" color={Expo.Constants.manifest.extra.COLOR} />
+                    </View>
+                </Modal>
+
+
+
+
+
+
+
+                <Modal
+                    transparent
+                    visible={this.state.show}
+                    animationType="fade"
+                >
+
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                width: width - 50,
+                                paddingTop: 20,
+                                alignItems: "center",
+                                height: "39%",
+                                borderRadius: 20
+                            }} >
+
+                            <Text style={{
+                                color: '#000',
+                                width: "86%",
+                                fontSize: 23
+                            }}>
+
+                               {this.state.successMessage}
+
+                            </Text>
+
+                            <Text
+                                style={{
+                                    color: 'grey',
+                                    fontSize: 20,
+                                    marginTop: 30
+                                }}>
+                                Please Log In !
+                            </Text>
+
+                            <View style={{ marginTop: 50, width: "80%" }}>
+
+                                <TouchableOpacity
+                                    style={styles.signIn}
+
+
+
+                                    onPress={() => {
+                                        this.setState({ show: false })
+                                        this.props.navigation.navigate('LogIn')
+                                    }}
+
+                                >
+                                    <LinearGradient
+                                        colors={['#fa93b3', Expo.Constants.manifest.extra.COLOR]}
+                                        style={styles.signIn}
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}> OK</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+
+                            </View>
+
+
+
+                        </View>
+                    </View>
+                </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <View style={styles.header}>
                     <Text style={styles.text_header}> Reset Your Password</Text>
                 </View>
@@ -62,6 +261,7 @@ export default class ResetPassword extends Component {
                         <ScrollView>
 
                             {/* email */}
+                            <Text style={styles.errorSingUp}> {this.state.emailErr}</Text>
                             < Text style={styles.text_footer}>Email </Text>
 
                             <View style={styles.action}>
@@ -77,13 +277,17 @@ export default class ResetPassword extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("email", text)}
+
                                 />
 
                             </View>
 
                             {/* Pin Code  */}
+                            <Text style={styles.errorSingUp}> {this.state.tokenErr}</Text>
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                style={[styles.text_footer, { marginTop: 2
+                                 }]}>
                                 Pin Code
                             </Text>
 
@@ -92,6 +296,7 @@ export default class ResetPassword extends Component {
                                     name="key"
                                     color={Expo.Constants.manifest.extra.COLOR}
                                     size={20}
+
                                 />
 
                                 <TextInput
@@ -99,6 +304,8 @@ export default class ResetPassword extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("token", text)}
+
                                 />
                             </View>
 
@@ -106,8 +313,10 @@ export default class ResetPassword extends Component {
 
 
                             {/* pass */}
+                            <Text style={styles.errorSingUp}> {this.state.passwordErr}</Text>
 
-                            <Text style={[styles.text_footer, { marginTop: 35 }]}>
+                            <Text style={[styles.text_footer, { marginTop: 2
+                             }]}>
                                 Password
                             </Text>
 
@@ -124,6 +333,8 @@ export default class ResetPassword extends Component {
                                     secureTextEntry={this.state.secureTextEntry ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("password", text)}
+
 
                                 />
                                 <TouchableOpacity
@@ -154,10 +365,11 @@ export default class ResetPassword extends Component {
 
 
                             {/* confirm Pass */}
-
+                            <Text style={styles.errorSingUp}> {this.state.passwordConfirmErr}</Text>
 
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                style={[styles.text_footer, { marginTop: 2
+                                 }]}>
                                 Confirm Password
                            </Text>
 
@@ -174,6 +386,8 @@ export default class ResetPassword extends Component {
                                     secureTextEntry={this.state.secureTextEntryConfirm ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("passwordConfirm", text)}
+
 
                                 />
                                 <TouchableOpacity
@@ -204,6 +418,11 @@ export default class ResetPassword extends Component {
                             {/* Button */}
 
                             <View style={styles.button}>
+                                <TouchableOpacity 
+                                    style={styles.signIn}
+                                    onPress={(e) => this.onSubmit(e)}
+                                    
+                                    >
                                 <LinearGradient
                                     colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
                                     style={styles.signIn}
@@ -212,7 +431,7 @@ export default class ResetPassword extends Component {
                                         color: '#fff'
                                     }]}> Rest Now</Text>
                                 </LinearGradient>
-
+                                </TouchableOpacity>
                             </View>
 
 
@@ -300,5 +519,13 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
+    },
+    errorSingUp: {
+        color: "#ff0000",
+        marginTop: 20,
+        fontStyle: 'italic',
+        fontSize: 12
+
     }
+
 });

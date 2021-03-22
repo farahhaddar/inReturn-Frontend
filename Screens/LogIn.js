@@ -7,6 +7,8 @@ import {
     Platform,
     SafeAreaView,
     ScrollView,
+    Modal,
+    ActivityIndicator,
     StyleSheet,
     StatusBar,
     Alert
@@ -24,10 +26,12 @@ export default class LogIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             email: "",
             password: "",
             secureTextEntry: true,
-            error: "",
+            emailErr: "",
+            passwordErr:""
         };
     }
 
@@ -46,8 +50,10 @@ export default class LogIn extends Component {
 
     onSubmit = async (e) => {
         e.preventDefault();
+        
+        this.setState({ isLoading: true })
 
-        const request = await fetch("http://192.168.0.105:8000/api/login", {
+        const request = await fetch(Expo.Constants.manifest.extra.API_URL+"login", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -61,7 +67,12 @@ export default class LogIn extends Component {
        
         const response = await request.json();
         const result = request.status;
+
         if (result == 200) {
+               
+            this.setState({ isLoading: false })
+
+           this.setState({emailErr:"",error:"",passwordErr:""})
 
             const storeData = async () => {
                 const token = response.access_token;
@@ -80,8 +91,26 @@ export default class LogIn extends Component {
             const store = await AsyncStorage.getItem("token");
             console.log(store);
         } else {
-            alert("You are not authorized to login !");
-            this.setState({ error:response.error})
+            
+            if (response.success === false){
+                this.setState({ isLoading: false })
+
+               response.error.message &&
+                   response.error.message.email &&
+                   response.error.message.email[0] &&
+                    this.setState({ emailErr:response.error.message.email[0] });
+
+               response.error.message &&
+                   response.error.message.password &&
+                   response.error.message.password[0] &&
+                    this.setState({ passwordErr:response.error.message.password[0] });
+
+
+            }else{
+                this.setState({ isLoading: false })
+                this.setState({ emailErr: "", error: response.error , passwordErr: "" })
+            }
+           
         }
     };
 
@@ -101,6 +130,31 @@ export default class LogIn extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                
+
+
+                <Modal
+                    transparent
+                    visible={this.state.isLoading}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <ActivityIndicator size="large" color={Expo.Constants.manifest.extra.COLOR} />
+                    </View>
+                  </Modal>
+
+
+
+
+
+
                 <View style={styles.header}>
                     <Text style={styles.text_header}>WELCOME !</Text>
                     <Text style={styles.text_header_Slog}> Alot Of Old Stuff ??  </Text>
@@ -116,8 +170,8 @@ export default class LogIn extends Component {
 
                         <ScrollView>
                               
-
-                            <Text>{this.state.error}</Text>
+                        
+                            <Text style={styles.errorSingUp}>{this.state.emailErr}{this.state.error}</Text>
                             
                             {/* email */}
                             < Text style={styles.text_footer}>Email </Text>
@@ -144,8 +198,9 @@ export default class LogIn extends Component {
 
 
                             {/* pass */}
+                            <Text style={styles.errorSingUp}>{this.state.passwordErr}</Text>
 
-                            <Text style={[styles.text_footer, { marginTop: 35 }]}>
+                            <Text style={[styles.text_footer, { marginTop: 10 }]}>
                                 Password
                             </Text>
 
@@ -325,5 +380,12 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
+    }, 
+    errorSingUp: {
+        color: "#ff0000",
+        marginTop: 10,
+        fontStyle: 'italic',
+        fontSize: 12
+
     }
 });

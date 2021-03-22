@@ -12,18 +12,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(false);
 
-  useEffect(() => {
+  // AsyncStorage.getAllKeys((err, keys) => {
+  //   AsyncStorage.multiGet(keys, (error, stores) => {
+  //     stores.map((result, i, store) => {
+  //       console.log({ [store[i][0]]: store[i][1] });
+  //       return true;
+  //     });
+  //   });
+  // });
 
-   token = () => {  AsyncStorage.getItem(token) }
-
-  }, [])
   
   return (
     <NavigationContainer>
 
-      {token ? <MaterialScreens  /> : <AuthStackNavigator  />}
+      {/* <MaterialScreens  />  */}
+       <AuthStackNavigator  />
      
 
 

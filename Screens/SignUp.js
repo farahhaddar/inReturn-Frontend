@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
     View,
     Text,
+    Dimensions,
     TouchableOpacity,
     TextInput,
     Platform,
@@ -9,7 +10,10 @@ import {
     ScrollView,
     StyleSheet,
     StatusBar,
-    Alert
+    ActivityIndicator,
+    Alert,
+    Modal,
+    Button
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient'
@@ -17,35 +21,73 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { navigation } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Picker } from "@react-native-community/picker";
+
+const width = Dimensions.get("window").width;
+
 
 export default class SignUp extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            isLoading:false,
+            show: false,
             secureTextEntry: true,
             secureTextEntryConfirm: true,
-            phoneNumber:'',
+            phoneNumber: '',
+            name: "",
+            email: "",
+            password: "",
+            passwordConfirm: "",
+            address: "",
+            extraInfo: "",
+            cityId: "",
+            cityData: [],
+            phoneNumberErr: '',
+            nameErr: "",
+            emailErr: "",
+            passwordErr: "",
+            passwordConfirmErr: "",
+            addressErr: "",
+            extraInfoErr: "",
+            cityIdErr: "",
+
+
         };
     }
 
 
+    // on change of inputs setState
+    onChangeValue = (name, text) => {
+        this.setState({ [name]: text });
+    };
 
-    // Phone Number
+    // drop down piccker
+    updateCityId = (e) => {
+        this.setState({ cityId: e });
+    };
+
+    
+   
+
+    // Phone Number numric validation and setState
     handlePhoneNumber = (number) => {
-        if (/^\d+$/.test(number) || number === ''){
+        if (/^\d+$/.test(number) || number === '') {
             this.setState({
                 phoneNumber: number
             });
         }
     }
 
-    // toggle
+    // toggle hide  for password
     updateSecureTextEntry = (e) => {
         this.setState({
             secureTextEntry: !this.state.secureTextEntry
         });
     }
+
+    // toggle hide password for confirmation
     updateSecureTextEntryConfirm = (e) => {
         this.setState({
             secureTextEntryConfirm: !this.state.secureTextEntryConfirm
@@ -53,10 +95,229 @@ export default class SignUp extends Component {
     }
 
 
+    onSubmit = async (e) => {
+
+        e.preventDefault();
+        this.setState({ isLoading:true})
+
+    
+        if (this.state.password !== this.state.passwordConfirm) {
+            this.setState({ isLoading: false })
+            this.setState({nameErr: "", cityIdErr: "", addressErr: "", phoneNumberErr: "", passwordErr: "", emailErr: "", })
+
+            this.setState({ passwordConfirmErr: "Your password must match !" });
+        } else {
+            try {
+
+                fetch(Expo.Constants.manifest.extra.API_URL +"register", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: this.state.name,
+                        email: this.state.email,
+                        password: this.state.password,
+                        phoneNb: this.state.phoneNumber,
+                        address: this.state.address,
+                        extraInfo: this.state.extraInfo,
+                        city_id: this.state.cityId
+                    }),
+                }).then((response) => response.text())
+                    .then((res) => {
+                        this.setState({ isLoading: false })
+                        if (JSON.parse(res).status == 200) {
+                            this.setState({ show: true, nameErr: "", cityIdErr: "", addressErr: "", phoneNumberErr: "", passwordErr: "", emailErr: "",})
+                        } else {
+                            this.setState({ passwordConfirmErr: "" })
+                            
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.name &&
+                                JSON.parse(res).error.message.name[0] &&
+                                this.setState({ nameErr: JSON.parse(res).error.message.name[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.email &&
+                                JSON.parse(res).error.message.email[0] &&
+                                this.setState({ emailErr: JSON.parse(res).error.message.email[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.password &&
+                                JSON.parse(res).error.message.password[0] &&
+                                this.setState({ passwordErr: JSON.parse(res).error.message.password[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.phoneNb &&
+                                JSON.parse(res).error.message.phoneNb[0] &&
+                                this.setState({ phoneNumberErr: JSON.parse(res).error.message.phoneNb[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.city_id &&
+                                JSON.parse(res).error.message.city_id[0] &&
+                                this.setState({ cityIdErr: JSON.parse(res).error.message.city_id[0] });
+
+                            JSON.parse(res).error.message &&
+                                JSON.parse(res).error.message.address &&
+                                JSON.parse(res).error.message.address[0] &&
+                                this.setState({ addressErr: JSON.parse(res).error.message.address[0] });
+                        }
+
+                    });
+
+
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+
+    };
+
+
+
+
+
+    componentDidMount() {
+
+
+        const request = async () => {
+
+            try {
+
+                fetch(Expo.Constants.manifest.extra.API_URL +"cities", {
+
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                        "content-type": "application/json"
+                    },
+                })
+                    .then((response) => response.text())
+                    .then((res) => {
+                        this.setState({ cityData: JSON.parse(res).data })
+                    });
+
+
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        request();
+    }
+
+
+
+
     render() {
+
+
         return (
+
             <View style={styles.container}>
-                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <StatusBar backgroundColor={Expo.Constants.manifest.extra.COLOR} barStyle="light-content" />
+
+              
+                <Modal
+                    transparent
+                    visible={this.state.isLoading}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <ActivityIndicator size="large" color={Expo.Constants.manifest.extra.COLOR} />
+                    </View>
+                </Modal>
+
+
+
+
+
+
+
+
+
+
+                <Modal
+                    transparent
+                    visible={this.state.show}
+                    animationType="fade"
+                >
+
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                width: width - 50,
+                                paddingTop: 20,
+                                alignItems: "center",
+                                height: "39%",
+                                borderRadius: 20
+                            }} >
+
+                            <Text style={{
+                                color: '#000',
+                                width: "86%",
+                                fontSize: 23
+                            }}>
+
+                                Successfully Registerd :)
+
+                            </Text>
+
+                            <Text
+                                style={{
+                                    color: 'grey',
+                                    fontSize: 20,
+                                    marginTop: 30
+                                }}>
+                                Please Log In !
+                            </Text>
+
+                            <View style={{ marginTop: 50, width: "80%" }}>
+
+                                <TouchableOpacity
+                                    style={styles.signIn}
+
+
+
+                                    onPress={() => {
+                                        this.setState({ show: false })
+                                        this.props.navigation.navigate('LogIn')
+                                    }}
+
+                                >
+                                    <LinearGradient
+                                        colors={['#fa93b3', Expo.Constants.manifest.extra.COLOR]}
+                                        style={styles.signIn}
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}> OK</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+
+                            </View>
+
+
+
+                        </View>
+                    </View>
+                </Modal>
+
                 <View style={styles.header}>
                     <Text style={styles.text_header}> Sign Up !</Text>
                     <Text style={styles.text_header_Slog}> You Have Thing You Don't Want Anymore? Sign Up And Exchnage It With New Things !! </Text>
@@ -72,9 +333,10 @@ export default class SignUp extends Component {
                         <ScrollView>
 
                             {/* user */}
+                            <Text style={styles.errorSingUp}> {this.state.nameErr}</Text>
                             <Text
                                 style={styles.text_footer}
-                                >
+                            >
                                 User Name
                             </Text>
 
@@ -90,12 +352,15 @@ export default class SignUp extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("name", text)}
                                 />
                             </View>
 
 
                             {/* email */}
-                            < Text style={[styles.text_footer, { marginTop: 35 }]}>Email </Text>
+                            <Text style={styles.errorSingUp}> {this.state.emailErr}</Text>
+
+                            < Text style={[styles.text_footer, { marginTop: 4 }]}>Email </Text>
 
                             <View style={styles.action}>
 
@@ -110,6 +375,7 @@ export default class SignUp extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("email", text)}
                                 />
 
                             </View>
@@ -117,8 +383,9 @@ export default class SignUp extends Component {
 
 
                             {/* pass */}
+                            <Text style={styles.errorSingUp}> {this.state.passwordErr}</Text>
 
-                            <Text style={[styles.text_footer, { marginTop: 35 }]}>
+                            <Text style={[styles.text_footer, { marginTop: 4 }]}>
                                 Password
                             </Text>
 
@@ -135,6 +402,7 @@ export default class SignUp extends Component {
                                     secureTextEntry={this.state.secureTextEntry ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("password", text)}
 
                                 />
                                 <TouchableOpacity
@@ -166,9 +434,11 @@ export default class SignUp extends Component {
 
                             {/* confirm Pass */}
 
+                            <Text style={styles.errorSingUp}> {this.state.passwordConfirmErr}</Text>
+
 
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                style={[styles.text_footer, { marginTop: 4 }]}>
                                 Confirm Password
                            </Text>
 
@@ -185,6 +455,7 @@ export default class SignUp extends Component {
                                     secureTextEntry={this.state.secureTextEntryConfirm ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("passwordConfirm", text)}
 
                                 />
                                 <TouchableOpacity
@@ -211,8 +482,10 @@ export default class SignUp extends Component {
 
 
                             {/* phone Nummber */}
+                            <Text style={styles.errorSingUp}> {this.state.phoneNumberErr}</Text>
+
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                style={[styles.text_footer, { marginTop: 4 }]}>
                                 Phone Nummber
                             </Text>
 
@@ -235,12 +508,50 @@ export default class SignUp extends Component {
 
 
                             {/* city drop down */}
+                            <Text style={styles.errorSingUp}> {this.state.cityIdErr}</Text>
+
+                            <View>
+
+                                <Text
+                                    style={[styles.text_footer, { marginTop: 5, marginBottom: 20 }]}>
+
+                                    City</Text>
+
+
+
+                                {this.state.cityData.length > 0 ?
+
+                                    <View style={{ borderWidth: 2, borderColor: Expo.Constants.manifest.extra.COLOR, borderRadius: 15 }}>
+                                        <Picker
+                                            style={{ color: "#666666" }}
+
+                                            selectedValue={this.state.cityId}
+                                            onValueChange={this.updateCityId}
+                                        >
+
+                                            <Picker.defaultValue label="Choose a city" ></Picker.defaultValue>
+                                            {this.state.cityData.map((data) => (
+                                                <Picker.Item label={data.name} value={data.id} />
+                                            ))}
+
+                                        </Picker>
+                                    </View>
+
+                                    :
+                                    <Text></Text>
+                                }
+
+                            </View>
+
 
 
 
                             {/* address */}
+
+                            <Text style={styles.errorSingUp}> {this.state.addressErr}</Text>
+
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
+                                style={[styles.text_footer, { marginTop: 4 }]}>
                                 Address
                             </Text>
 
@@ -256,14 +567,15 @@ export default class SignUp extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("address", text)}
                                 />
                             </View>
 
 
                             {/* extra info */}
                             <Text
-                                style={[styles.text_footer, { marginTop: 35 }]}>
-                                 Address Details
+                                style={[styles.text_footer, { marginTop: 20 }]}>
+                                Address Details
                             </Text>
 
                             <View style={styles.action}>
@@ -278,6 +590,7 @@ export default class SignUp extends Component {
                                     placeholderTextColor="#666666"
                                     style={styles.textInput}
                                     autoCapitalize="none"
+                                    onChangeText={(text) => this.onChangeValue("extraInfo", text)}
                                 />
                             </View>
 
@@ -290,15 +603,19 @@ export default class SignUp extends Component {
 
 
                             <View style={styles.button}>
-                                <TouchableOpacity style={styles.signIn}>
-                                <LinearGradient
-                                    colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
-                                    style={styles.signIn}
+                                <TouchableOpacity style={styles.signIn}
+
+                                    onPress={(e) => this.onSubmit(e)}
+
                                 >
-                                    <Text style={[styles.textSign, {
-                                        color: '#fff'
-                                    }]}> Sign Up Now</Text>
-                                </LinearGradient>
+                                    <LinearGradient
+                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                        style={styles.signIn}
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}> Sign Up Now</Text>
+                                    </LinearGradient>
                                 </TouchableOpacity>
                             </View>
 
@@ -393,5 +710,13 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
+    },
+    errorSingUp: {
+        color: "#ff0000",
+        marginTop: 20,
+        fontStyle: 'italic',
+        fontSize: 12
+
     }
+
 });
