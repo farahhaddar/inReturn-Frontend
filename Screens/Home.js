@@ -1,12 +1,41 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, StyleSheet,View,ScrollView,SafeAreaView } from 'react-native'
+import Search from "../Components/Search"
+import Cat from "../Components/Cat"
+import Profile from "../Components/Profile"
+
 
 export default class Home extends Component {
     render() {
         return (
-            <View>
-                <Text> textInComponent </Text>
-            </View>
+            <SafeAreaView>
+                
+                    <Search />
+                    <Cat />
+                    <Text style={styles.title}>Trade Now! </Text>
+                <ScrollView>
+
+           
+                </ScrollView>
+               
+
+            </SafeAreaView>
+              
+                
+        
         )
     }
 }
+
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 20,
+        marginLeft: 20,
+        marginTop: 17,
+    },
+   
+
+
+})
+
+

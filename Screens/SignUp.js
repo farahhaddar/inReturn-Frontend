@@ -301,7 +301,7 @@ export default class SignUp extends Component {
 
                                 >
                                     <LinearGradient
-                                        colors={['#fa93b3', Expo.Constants.manifest.extra.COLOR]}
+                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
                                         style={styles.signIn}
                                     >
                                         <Text style={[styles.textSign, {
@@ -609,7 +609,7 @@ export default class SignUp extends Component {
 
                                 >
                                     <LinearGradient
-                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
                                         style={styles.signIn}
                                     >
                                         <Text style={[styles.textSign, {

@@ -87,7 +87,7 @@ export default class LogIn extends Component {
                         this.setState({ emailErr: '', redirect: false, show: true, message: JSON.parse(res).error.message })
 
                     } else {
-                        // this.setState({ isLoading: false })
+                        
                         JSON.parse(res).error &&
                             JSON.parse(res).error.message &&
                             JSON.parse(res).error.message.email &&
@@ -112,7 +112,7 @@ export default class LogIn extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <StatusBar backgroundColor={Expo.Constants.manifest.extra.COLOR} barStyle="light-content" />
                 
               
                 <Modal
@@ -190,7 +190,7 @@ export default class LogIn extends Component {
 
                                     >
                                         <LinearGradient
-                                            colors={['#fa93b3', Expo.Constants.manifest.extra.COLOR]}
+                                            colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
                                             style={styles.signIn}
                                         >
                                             <Text style={[styles.textSign, {
@@ -210,7 +210,7 @@ export default class LogIn extends Component {
 
                                     >
                                         <LinearGradient
-                                            colors={['#fa93b3', Expo.Constants.manifest.extra.COLOR]}
+                                            colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
                                             style={styles.signIn}
                                         >
                                             <Text style={[styles.textSign, {
@@ -287,7 +287,7 @@ export default class LogIn extends Component {
                                 >
 
                                     <LinearGradient
-                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
 
                                         style={styles.signIn}
 

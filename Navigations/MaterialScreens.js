@@ -3,11 +3,17 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import { HomeStackNavigator, WishListStackNavigator, DealsStackNavigator, UserStackNavigator} from "./StackNavigation";
+import User from "../Screens/User";
 
 
 const MaterialTab = createMaterialBottomTabNavigator();
 
-const MaterialScreens = () => {
+const MaterialScreens = (props) => {
+
+    const handleRedner = (value) => {
+        props.render2(value)
+    }
+
     return (
         <MaterialTab.Navigator
             initialRouteName="inReturn"
@@ -59,14 +65,16 @@ const MaterialScreens = () => {
             />
             <MaterialTab.Screen
                 name="Profile"
-                component={UserStackNavigator}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="account" color={color} size={26} />
                     ),
                 }}
-            />
+            >
+                {() => <UserStackNavigator render={props.render} handleRedner={handleRedner} />}
+
+            </MaterialTab.Screen>
 
         </MaterialTab.Navigator>
     );

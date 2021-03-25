@@ -17,7 +17,6 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { navigation } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -74,22 +73,20 @@ export default class LogIn extends Component {
 
            this.setState({emailErr:"",error:"",passwordErr:""})
 
-            const storeData = async () => {
+            const storeData = async (e) => {
                 const token = response.access_token;
                 const user = JSON.stringify(response.user);
                 try {
                     await AsyncStorage.setItem("token", token);
                     await AsyncStorage.setItem("user", user);
-                    this.props.setToken(true);
+                    this.props.handleRedner(!this.props.render)
             
                 } catch (e) {
-                    alert("Faild To Log In ")
+                    alert("Failed To Log In ")
                     console.log(e);
                 }
             };
             storeData();
-            const store = await AsyncStorage.getItem("token");
-            console.log(store);
         } else {
             
             if (response.success === false){
@@ -127,9 +124,10 @@ export default class LogIn extends Component {
 
 
     render() {
+        console.log("log" + this.props.navigation.navigate);
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor='#F2808A' barStyle="light-content" />
+                <StatusBar backgroundColor={Expo.Constants.manifest.extra.COLOR} barStyle="light-content" />
                 
 
 
@@ -254,7 +252,7 @@ export default class LogIn extends Component {
                                     style={styles.signIn}
                                 >
                                     <LinearGradient
-                                        colors={['#fa93a1', Expo.Constants.manifest.extra.COLOR]}
+                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
                                         style={styles.signIn}
                                     >
                                         <Text style={[styles.textSign, {

@@ -30,7 +30,8 @@
     },
     "extra": {
       "API_URL": "http://192.168.0.105:8000/api/",
-      "COLOR":"#F2808A"
+      "COLOR":"#69d48e",
+      "SHADE":"#93DFB8"
     }
   }
 }

@@ -7,12 +7,26 @@ import { MaterialScreens } from "./Navigations/MaterialScreens";
 import { LogBox } from 'react-native'
 LogBox.ignoreAllLogs();
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { navigation } from "react-native";
 
 
 
 export default function App() {
 
-  // const [token, setToken] = useState(false);
+  const [token, setToken] = useState('')
+  const [render, setRender] = useState(false)
+
+  const render2=(value)=>{
+    setRender(value)
+
+  }
+
+  useEffect(() => {
+    const getToken = async () => {
+      setToken(await AsyncStorage.getItem('token'))
+    }
+    getToken()
+  }, [render, render2])
 
   // AsyncStorage.getAllKeys((err, keys) => {
   //   AsyncStorage.multiGet(keys, (error, stores) => {
@@ -23,21 +37,19 @@ export default function App() {
   //   });
   // });
 
-  
+
   return (
     <NavigationContainer>
 
-      {/* <MaterialScreens  />  */}
-       <AuthStackNavigator  />
-     
-
+      {token ?
+        <MaterialScreens render2={render2} render={render} />
+        :
+        <AuthStackNavigator render2={render2}  render={render} />
+      }
 
     </NavigationContainer>
   );
 }
 
 
-const styles = StyleSheet.create({
 
-
-});

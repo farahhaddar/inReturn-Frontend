@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 
 const screenOptionStyle = {
     headerStyle: {
-        
+
         backgroundColor: Expo.Constants.manifest.extra.COLOR,
     },
     headerTintColor: "white",
@@ -25,7 +25,7 @@ const screenOptionStyle = {
 
 const HomeStackNavigator = () => {
     return (
-        <Stack.Navigator  screenOptions={screenOptionStyle}>
+        <Stack.Navigator screenOptions={screenOptionStyle}>
             <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
     );
@@ -45,24 +45,45 @@ const DealsStackNavigator = () => {
         </Stack.Navigator>
     );
 };
-const UserStackNavigator = () => {
+
+const UserStackNavigator = (props) => {
+    const handleRedner2 = (value) => {
+        props.handleRedner(value)
+    }
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
-            <Stack.Screen name="My Profile" component={User} />
-        </Stack.Navigator>
-    );
-};
-const AuthStackNavigator = () => {
-    return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false }}>
-            {/* <Stack.Screen name="Splash" component={Splash} /> */}
-            <Stack.Screen name="LogIn" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen name="My Profile" >
+                {() => <User render={props.render} handleRedner2={handleRedner2}  />}
+
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
 
-export { HomeStackNavigator, WishListStackNavigator, DealsStackNavigator, UserStackNavigator, AuthStackNavigator};
+
+const AuthStackNavigator = (props) => {
+    const handleRedner = (value) => {
+        props.render2(value)
+    }
+    
+    return (
+        <Stack.Navigator screenOptions={{
+            headerShown: false
+        }}>
+            {/* <Stack.Screen name="Splash" component={Splash} /> */}
+            
+            <Stack.Screen name="LogIn" >
+                {(props) => <Login {...props} handleRedner={handleRedner} />}
+            </Stack.Screen>
+
+            <Stack.Screen name="SignUp"  component={SignUp} />
+
+            <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
+
+            <Stack.Screen name="ResetPassword"  component={ResetPassword} />
+
+        </Stack.Navigator>
+    );
+};
+
+export { HomeStackNavigator, WishListStackNavigator, DealsStackNavigator, AuthStackNavigator, UserStackNavigator };
