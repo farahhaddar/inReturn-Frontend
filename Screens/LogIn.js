@@ -156,7 +156,7 @@ export default class LogIn extends Component {
                 <View style={styles.header}>
                     <Text style={styles.text_header}>WELCOME !</Text>
                     <Text style={styles.text_header_Slog}> Alot Of Old Stuff ??  </Text>
-                    <Text style={styles.text_header_Slog}> Login And Exchnage It With New Things !! </Text>
+                    <Text style={styles.text_header_Slog}> Login And Exchange It With New Things !! </Text>
                 </View>
 
 

@@ -1,86 +1,149 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    View,
-    FlatList,
-    ScrollView,
-    AppRegistry,
-} from "react-native";
+import React, { Component } from 'react'
+import { Text, FlatList, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default class FlatListComp extends React.Component {
+
+export default class Flatlist extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            input: [],
-            input1: [],
-        };
-    }
-    handleMore = () => {
-        this.setState({ input: [...this.state.input, this.state.input1] });
-    };
+            data: [
+                {
+                    name: "farah",
+                    id: "1"
+                },
+                {
+                    name: "ali",
+                    id: "2"
+                },
+                {
+                    name: "hsen",
+                    id: "3"
+                },
+                {
+                    name: "hassan",
+                    id: "4"
+                },
+                {
+                    name: "khaldoun",
+                    id: "6"
+                },
+
+
+            ]
+        }
+    } 
+   
+
 
     render() {
-        var color = ["255,255,255", "245, 245, 245"];
 
         return (
-            <View style={{ flex: 1, paddingTop: 30 }}>
-                {/* <ScrollView> */}
-                <View style={[styles.flex, { position: "relative" }]}>
-                    <Text style={styles.tableTitle}>Project</Text>
-                    <Text style={styles.tableTitle}>Role</Text>
-                </View>
+
+            <ScrollView
+                contentContainerStyle={styles.contentContainer}
+                style={styles.flat}
+            >
+
 
                 <FlatList
-                    keyExtractor={(item, index) => index}
-                    data={this.state.input}
-                    renderItem={({ item, index }) => (
-                        <View
-                            style={[
-                                styles.flex,
-                                { backgroundColor: "rgb(" + color[index % 2] + ")" },
-                            ]}
-                        >
-                            <Text style={styles.users}>asdsads</Text>
-                            <Text style={styles.users}>Manager</Text>
+                    keyExtractor={(item) => item.id}
+                    numColumns={2}
+                    data={this.state.data}
+                    renderItem={({ item }) => (
+
+                        <View style={styles.container}>
+                            <TouchableOpacity>
+                            <View style={styles.cardMain} >
+                               
+                                <Image
+                                    style={{ width:'auto', height: 150, marginBottom: 15,borderTopRightRadius:15,borderTopLeftRadius:15 }}
+                                    source={require("../assets/avatar1.jpeg")}
+                                />
+                                
+
+                               
+                                    <Text style={styles.title}> farah haddar </Text>
+                               
+
+                                    <View style={styles.footer}>
+                                    <View style={styles.section}>
+                                        <TouchableOpacity>
+                                        <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
+                                        <Text style={styles.txtsection}> WishList </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.section}>
+                                        <TouchableOpacity>
+                                        <FontAwesome style={styles.Iconsection} name="exchange" size={20} color='black' />
+                                        <Text style={styles.txtsection} > Trade Now! </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    </View>
+                               
+                            </View>
+                            </TouchableOpacity>
                         </View>
+
+
                     )}
-                    onEndReached={this.handleMore}
-                ></FlatList>
-                {/* </ScrollView> */}
-            </View>
-        );
+
+                />
+    
+            </ScrollView>
+            
+
+
+        )
     }
 }
-AppRegistry.registerComponent("Example of FlatList", () => FlatListComp);
+
 const styles = StyleSheet.create({
-    users: {
-        fontSize: 25,
-        borderWidth: 0,
-        padding: 20,
-        width: "50%",
+    flat: {
+        height: 555,
     },
-    flex: {
+    container: {
+        margin: "3%",
+        marginLeft: 10,
+        height: "100%",
+        marginBottom: 10
+    },
+    cardMain: {
+        backgroundColor: "white",
+        width: 160,
+        height: 280,
+        borderRadius: 17,
+        borderWidth: 1,
+        borderColor: Expo.Constants.manifest.extra.COLOR,
+    },
+    title:{
+       fontSize:20,
+       fontWeight:"bold",
+       textAlign:"center",
+        flex: 1, 
+        flexWrap: 'wrap'
+    },
+    footer:{
+    marginTop: 7,
+    justifyContent: 'space-around',
+     display:"flex",
+     flexDirection:"row"
+    },
+    section:{
+        margin:7,
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
     },
-    flex1: {
-        display: "flex",
-        flexDirection: "row",
-        backgroundColor: "rgb(245, 245, 245)",
-    },
-    tableTitle: {
-        color: "grey",
-        fontSize: 25,
-        paddingLeft: 20,
-        paddingTop: 20,
-        marginTop: 20,
-        width: "50%",
-    },
-    width: {
-        borderBottomWidth: 1,
-        borderBottomColor: "grey",
-    },
-});
+     Iconsection:{
+         textAlign:'center',
+         marginBottom:4,
+
+    }, txtsection:{
+        fontSize:10,
+
+    }
+    
+
+})

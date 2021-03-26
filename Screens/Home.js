@@ -3,22 +3,26 @@ import { Text, StyleSheet,View,ScrollView,SafeAreaView } from 'react-native'
 import Search from "../Components/Search"
 import Cat from "../Components/Cat"
 import Profile from "../Components/Profile"
-
+import Card from "../Components/Card"
+import FlatList from "../Components/Flatlist"
 
 export default class Home extends Component {
     render() {
         return (
-            <SafeAreaView>
-                
+            <SafeAreaView >
+
+                <View style={styles.main}>
                     <Search />
                     <Cat />
-                    <Text style={styles.title}>Trade Now! </Text>
-                <ScrollView>
-
-           
-                </ScrollView>
+                    <Text style={styles.title}>Products To Trade With: </Text>
+       
+                        <FlatList/>
+                   
+                  
+    
                
-
+                </View>
+    
             </SafeAreaView>
               
                 
@@ -30,10 +34,16 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
     title: {
         fontSize: 20,
-        marginLeft: 20,
-        marginTop: 17,
-    },
-   
+        margin: 10,
+        backgroundColor: 'white',
+    } ,
+     main:{
+            backgroundColor:'white',
+            height: '100%'
+        
+    }
+
+
 
 
 })

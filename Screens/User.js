@@ -3,6 +3,7 @@ import { Touchable } from 'react-native'
 import { Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Profile from "../Components/Profile"
 
 export default class User extends Component {
 
@@ -38,6 +39,7 @@ export default class User extends Component {
                 <TouchableOpacity onPress={(e) => this.handleLogout(e)}>
                     <Text>Logout</Text>
                 </TouchableOpacity>
+                {/* <Profile/> */}
             </View>
         )
     }

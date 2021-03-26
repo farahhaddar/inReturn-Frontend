@@ -43,7 +43,7 @@ export default class Cat extends Component {
     render() {
 
         return (
-            <SafeAreaView>
+            <SafeAreaView style={styles.main}>
           
                 <Text style={styles.title} >Filter By Category: </Text>
 
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 50,
         height: 50,
-        // backgroundColor: "rgba(0, 0, 0, 0.1)",
         borderRadius: 50,
     },
     categoryBtnTxt: {
@@ -115,6 +114,9 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: "rgba(0, 0, 0, 0.2)",
     },
+    main:{
+        backgroundColor: 'white'
+    }
 
 
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import { SearchBar } from "react-native-elements";
 
 export default class Search extends Component {
@@ -36,8 +36,6 @@ export default class Search extends Component {
                 if (JSON.parse(res).data.length == rows) {
                     this.state.page = this.state.page + 1;
                 }
-                // let x = JSON.parse(res);
-                // if (x.data.length > 1) while (x.data.length > 1) x.data.pop();
                 this.setState({ employees: JSON.parse(res) });
                 count = JSON.parse(res).data.length;
             })
@@ -49,7 +47,7 @@ export default class Search extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.main}>
                 <SearchBar
                     containerStyle={{
                         backgroundColor: "wite",
@@ -68,7 +66,7 @@ export default class Search extends Component {
                         borderRadius: 90,
                     }}
                     placeholderTextColor={"rgba(255,25,146)"}
-                    placeholder={"Start Typing..."}
+                    placeholder={"Search By Name..."}
                     onChangeText={(text) => { this.handleSearch(text) }}
                      value={this.state.search}
 
@@ -78,3 +76,11 @@ export default class Search extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+
+    main: {
+        backgroundColor: 'white'
+    }
+})
+

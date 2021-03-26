@@ -4,6 +4,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 
 import { HomeStackNavigator, WishListStackNavigator, DealsStackNavigator, UserStackNavigator} from "./StackNavigation";
 import User from "../Screens/User";
+import AddItem from "../Screens/AddItem";
 
 
 const MaterialTab = createMaterialBottomTabNavigator();
@@ -45,7 +46,7 @@ const MaterialScreens = (props) => {
             />
             <MaterialTab.Screen
                 name="NewOffer"
-                component={DealsStackNavigator}
+                component={AddItem}
                 options={{
                     tabBarLabel: 'New Offer',
                     tabBarIcon: ({ color }) => (

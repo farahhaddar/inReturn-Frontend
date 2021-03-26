@@ -41,11 +41,11 @@ export default function App() {
   return (
     <NavigationContainer>
 
-      {token ?
+      {/* {token ? */}
         <MaterialScreens render2={render2} render={render} />
-        :
-        <AuthStackNavigator render2={render2}  render={render} />
-      }
+        {/* : */} 
+        {/* <AuthStackNavigator render2={render2}  render={render} /> */}
+      {/* } */}
 
     </NavigationContainer>
   );
