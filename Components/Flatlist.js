@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
-import { Text, FlatList, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, FlatList, Modal, StatusBar, ActivityIndicator,StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ItemDetails from '../Screens/ItemDetails';
+
+
 
 
 export default class Flatlist extends Component {
@@ -9,6 +12,8 @@ export default class Flatlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            show:false,
+            itemId:"",
             data: [
                 {
                     name: "farah",
@@ -36,16 +41,52 @@ export default class Flatlist extends Component {
         }
     } 
    
+   handleItem=()=>{
+       this.setState({ show: !this.state.show })
+   }
 
 
     render() {
+       
 
         return (
-
+          
+            
             <ScrollView
                 contentContainerStyle={styles.contentContainer}
                 style={styles.flat}
             >
+
+                <Modal
+                    transparent
+                    visible={this.state.show}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "white",
+                        flex: 1, 
+                    }}>
+                        <TouchableOpacity 
+                            onPress={() => {
+                               this.handleItem
+
+                            }}
+                        >
+        
+                        </TouchableOpacity>
+                        <ItemDetails  itemId={this.state.itemId} show={this.handleItem}/>
+
+          
+                    </View>
+                </Modal>
+
+
+
+
+
+
+
+
 
 
                 <FlatList
@@ -55,7 +96,12 @@ export default class Flatlist extends Component {
                     renderItem={({ item }) => (
 
                         <View style={styles.container}>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                   this.setState({show:!this.state.show,itemId:item.id})
+                                }}
+                            
+                            >
                             <View style={styles.cardMain} >
                                
                                 <Image
@@ -70,7 +116,10 @@ export default class Flatlist extends Component {
 
                                     <View style={styles.footer}>
                                     <View style={styles.section}>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                               
+                                        
+                                        >
                                         <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
                                         <Text style={styles.txtsection}> WishList </Text>
                                         </TouchableOpacity>
@@ -116,7 +165,7 @@ const styles = StyleSheet.create({
         height: 280,
         borderRadius: 17,
         borderWidth: 1,
-        borderColor: Expo.Constants.manifest.extra.COLOR,
+        borderColor: 'rgba(0,0,0,0.7)',
     },
     title:{
        fontSize:20,

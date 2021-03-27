@@ -9,12 +9,12 @@ import SignUp from "../Screens/SignUp";
 import ForgetPassword from "../Screens/ForgetPassword";
 import ResetPassword from "../Screens/ResetPassword";
 import Splash from "../Screens/SplashScreen";
+import ItemDetails from "../Screens/ItemDetails";
 
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
     headerStyle: {
-
         backgroundColor: Expo.Constants.manifest.extra.COLOR,
     },
     headerTintColor: "white",
@@ -38,6 +38,16 @@ const WishListStackNavigator = () => {
         </Stack.Navigator>
     );
 };
+
+const ItemDetailStackNavigator = () => {
+    return (
+        <Stack.Navigator   headerMode='none' screenOptions={{animationEnabled:false}}>
+            <Stack.Screen   name="ItemDetails" component={ItemDetails} />
+        </Stack.Navigator>
+    );
+};
+
+
 const DealsStackNavigator = () => {
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -86,4 +96,4 @@ const AuthStackNavigator = (props) => {
     );
 };
 
-export { HomeStackNavigator, WishListStackNavigator, DealsStackNavigator, AuthStackNavigator, UserStackNavigator };
+export { HomeStackNavigator, ItemDetailStackNavigator, WishListStackNavigator, DealsStackNavigator, AuthStackNavigator, UserStackNavigator };

@@ -29,9 +29,10 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "API_URL": "http://192.168.1.90:8000/api/",
-      "COLOR":"#F2808A",
-      "SHADE":"#ffaab4"
+      "API_URL": "http://192.168.0.105:8000/api/",
+      "COLOR":"#4E9FFE",
+      "SHADE":"#71B3FF",
+      "RED":"#EE2C2C"
     }
   }
 }

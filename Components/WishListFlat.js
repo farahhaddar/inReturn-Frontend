@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { Text, FlatList, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, FlatList, Modal, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather';
-
+import ItemDetails from "../Screens/ItemDetails"
 
 export default class WishListFlat extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            show: "",
+            itemId: "",
 
             data: [
                 {
@@ -47,66 +49,103 @@ export default class WishListFlat extends Component {
         return y + "...";
 
     }
-
+  
+    handleItem = () => {
+        this.setState({ show: !this.state.show })
+    }
 
 
     render() {
-    
+
         return (
+            <View>
+                <Modal
+                    transparent
+                    visible={this.state.show}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "white",
+                        flex: 1,
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.handleItem
 
-            <ScrollView
-                contentContainerStyle={styles.contentContainer}
-                style={styles.flat}
-            >
+                            }}
+                        >
 
-
-                <FlatList
-                    keyExtractor={(item) => item.id}
-                    data={this.state.data}
-                    renderItem={({ item }) => (
-        
-                        <TouchableOpacity style={styles.wrapper}>
-                          
-                            <View style={styles.wrapperPhoto}>
-                                <Image
-                                    source={require("../assets/avatar1.jpeg")}
-                                    style={styles.itemPhoto}
-                                    resizeMode="cover"
-                                />
-                            </View>
-                            <View>
-                                <View style={styles.itemBtn}>
-                                    <Text style={styles.itemName}>
-                                        Item Name 
-                                </Text>
-
-                                 <TouchableOpacity>
-                                    <Feather
-                                        name="delete"
-                                        color={Expo.Constants.manifest.extra.COLOR}
-                                        size={20}
-                                    />
-                                    </TouchableOpacity>
-
-                                </View>
-                                <Text style={styles.itemDate}>2021/3/29</Text>
-                                <Text style={styles.itemdata}>
-                                    {this.handleDets(item.dets)}
-                                </Text>
-                            </View>
-        
                         </TouchableOpacity>
-                       
+                        <ItemDetails itemId={this.state.itemId} show={this.handleItem} />
+
+
+                    </View>
+                </Modal>
 
 
 
-                    )}
-
-                />
-
-            </ScrollView>
 
 
+                <ScrollView
+                    contentContainerStyle={styles.contentContainer}
+                    style={styles.flat}
+                >
+
+
+
+                    <FlatList
+                        keyExtractor={(item) => item.id}
+                        data={this.state.data}
+                        renderItem={({ item }) => (
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({ show: !this.state.show, itemId: item.id })
+                                }}
+
+                                style={styles.wrapper}>
+
+                                <View style={styles.wrapperPhoto}>
+                                    <Image
+                                        source={require("../assets/avatar1.jpeg")}
+                                        style={styles.itemPhoto}
+                                        resizeMode="cover"
+                                    />
+                                </View>
+                                <View>
+                                    <View style={styles.itemBtn}>
+                                        <Text style={styles.itemName}>
+                                            Item Name
+                                </Text>
+
+                                        <TouchableOpacity>
+                                            <Feather
+                                                name="delete"
+                                                color={Expo.Constants.manifest.extra.RED}
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
+
+                                    </View>
+                                    <Text style={styles.itemDate}>2021/3/29</Text>
+                                    <Text style={styles.itemdata}>
+                                        {this.handleDets(item.dets)}
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+
+
+
+
+
+                        )}
+
+                    />
+
+                </ScrollView>
+
+            </View>
 
         )
     }
@@ -143,8 +182,8 @@ const styles = StyleSheet.create({
     itemName: {
         fontWeight: "bold",
         fontSize: 15,
-        flexWrap:"wrap",
-        width:200
+        flexWrap: "wrap",
+        width: 200
     },
     itemDate: {
         fontSize: 10,
@@ -160,7 +199,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: "row",
         justifyContent: 'space-around',
-        marginLeft:3,
+        marginLeft: 3,
 
     }
 

@@ -88,7 +88,7 @@ export default class SentFlatList extends Component {
                                         <TouchableOpacity>
                                             <Feather
                                                 name="delete"
-                                                color={Expo.Constants.manifest.extra.COLOR}
+                                                color={Expo.Constants.manifest.extra.RED}
                                                 size={20}
                                             />
                                         </TouchableOpacity>
@@ -110,10 +110,10 @@ export default class SentFlatList extends Component {
 
         
                                     <View style={styles.emoticontext}>
-                                        <Text> Yay </Text>
+                                        <Text > Yay </Text>
                                         <MaterialCommunityIcons
                                             name="emoticon-happy"
-                                            color="black"
+                                        color="#98B82A"
                                             size={20}
                                         />
                                     </View>

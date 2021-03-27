@@ -124,7 +124,8 @@ export default class LogIn extends Component {
 
 
     render() {
-        console.log("log" + this.props.navigation.navigate);
+       
+        
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor={Expo.Constants.manifest.extra.COLOR} barStyle="light-content" />

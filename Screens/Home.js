@@ -16,7 +16,9 @@ export default class Home extends Component {
                     <Cat />
                     <Text style={styles.title}>Products To Trade With: </Text>
        
-                        <FlatList/>
+                    <FlatList/>
+
+                        
                    
                   
     
