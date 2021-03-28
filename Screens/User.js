@@ -11,7 +11,7 @@ export default class User extends Component {
         super(props);
     }
 
-    handleLogout = async (e) => {
+    handleLogout = async () => {
         const response = await fetch(Expo.Constants.manifest.extra.API_URL+'logout', {
             method: 'POST',
             headers: {
@@ -33,13 +33,12 @@ export default class User extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View >
 
-                <Text> textInComponent </Text>
-                <TouchableOpacity onPress={(e) => this.handleLogout(e)}>
+                {/* <TouchableOpacity onPress={(e) => this.handleLogout(e)}>
                     <Text>Logout</Text>
-                </TouchableOpacity>
-                {/* <Profile/> */}
+                </TouchableOpacity> */}
+                <Profile  navigation={this.props.navigation}handleLogout={this.handleLogout}/>
             </View>
         )
     }

@@ -111,7 +111,7 @@ export default class Flatlist extends Component {
                                 
 
                                
-                                    <Text style={styles.title}> farah haddar </Text>
+                                    <Text style={styles.title}> {item.name} </Text>
                                
 
                                     <View style={styles.footer}>

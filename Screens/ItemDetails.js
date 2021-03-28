@@ -18,17 +18,50 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import VisitProfile from '../Components/VisitProfile';
 
 
 
 export default class ItemDetails extends Component {
+  
+    constructor(props) {
+      super(props)
+  
+      this.state = {
+          showUser:false,
+          userId:'',
+      }
+  }
 
+    handleUser= () => {
+    this.setState({ showUser: !this.state.showUser })
+}
+  
 
     render() {
         return (
 
 
             <SafeAreaView style={{ flex: 1 }}>
+  
+
+         {/* User Profile vist model */}
+
+                <Modal
+                    transparent
+                    visible={this.state.showUser}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "white",
+                        flex: 1,
+                    }}>
+                      
+                        <VisitProfile userId={this.state.userId} showUser={this.handleUser} />
+
+
+                    </View>
+                </Modal>
 
 
                 <StatusBar translucent backgroundColor="rgba(0,0,0,0)" />
@@ -86,8 +119,12 @@ export default class ItemDetails extends Component {
                     <ScrollView>
                           
                            {/* user name and image */}
-
+                        <TouchableOpacity onPress={() => {
+                            this.setState({ showUser: !this.state.showUser, userId:'id' })
+                        }} >
                         <View style={{ flexDirection: 'row',alignItems:"center", marginTop: 5 }}>
+
+                           
 
                             <Image
                                 source={require("../assets/avatar1.jpeg")}
@@ -103,8 +140,12 @@ export default class ItemDetails extends Component {
                                 }}>
                                  User Name
                             </Text>
+                           
                         </View>
+                        </TouchableOpacity>
                           
+
+
                           {/* date posted  */}
 
                         <Text style={{ marginLeft:70,marginTop:-8,fontSize: 15, color:"grey" }}>

@@ -19,27 +19,21 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Picker } from "@react-native-community/picker";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient'
-import { Picker } from "@react-native-community/picker";
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions'
-import MultiSelect from 'react-native-multiple-select';
-
-
-const width = Dimensions.get("window").width;
+import ItemDetails from '../Screens/ItemDetails';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 
-export default class Profile extends Component {
+export default class VisitProfile extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            showDelete:false,
-            showitemEdit:false,
-            showUserEdit:false,
+            show: false,
+            itemId: "",
             data: [
                 {
                     name: "farah",
@@ -87,227 +81,35 @@ export default class Profile extends Component {
         }
     }
 
+    handleItem = () => {
+        this.setState({ show: !this.state.show })
+    }
+
     render() {
 
         return (
             <SafeAreaView style={{ backgroundColor: "white", maxHeight: 800 }}>
-                  
-                  {/* Modals */}
-
-                  {/* loading model  */}
-
-                {/* <Modal
-                    transparent
-                    visible={this.state.isLoading}
-                    animationType="fade"
-                >
-                    <View style={{
-                        backgroundColor: "#000000aa",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
-                    }}>
-
-                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
-
-                        <ActivityIndicator size="large" color={Expo.Constants.manifest.extra.COLOR} />
-                    </View>
-                </Modal> */}
-
-
-
-               {/* delelet Model */}
 
                 <Modal
                     transparent
-                    visible={this.state.showDelete}
+                    visible={this.state.show}
                     animationType="fade"
                 >
-
-                    <View style={{
-                        backgroundColor: "#000000aa",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
-                    }}>
-
-                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
-
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: width - 50,
-                                paddingTop: 20,
-                                alignItems: "center",
-                                height: "39%",
-                                borderRadius: 20
-                            }} >
-
-                            <Text style={{
-                                color: '#000',
-                                width: "86%",
-                                fontSize: 23
-                            }}>
-
-                               Item Successfully Deleted.
-
-                            </Text>
-
-                            
-                            <View style={{ marginTop: 50, width: "80%" }}>
-
-                                <TouchableOpacity
-                                    style={styles.signIn}
-                                    onPress={() => {
-                                        this.setState({ showDelete: !this.state.showDelete })
-                                        // this.props.navigation.navigate('UserStackNavigator')
-                                    }}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
-                                    >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> OK</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
-                        </View>
-                    </View>
-                </Modal>
-                        
-
-                        {/* edit user profile */}
-                <Modal
-                    transparent
-                    visible={this.state.showUserEdit}
-                    animationType="fade"
-                >
-
                     <View style={{
                         backgroundColor: "white",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
+                        flex: 1,
                     }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.handleItem
 
-                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+                            }}
+                        >
 
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: width - 50,
-                                paddingTop: 20,
-                                alignItems: "center",
-                                height: "39%",
-                                borderRadius: 20
-                            }} >
-
-                            <Text style={{
-                                color: '#000',
-                                width: "86%",
-                                fontSize: 23
-                            }}>
-
-                                user Model
-
-                            </Text>
+                        </TouchableOpacity>
+                        <ItemDetails itemId={this.state.itemId} show={this.handleItem} />
 
 
-                            <View style={{ marginTop: 50, width: "80%" }}>
-
-                                <TouchableOpacity
-                                    style={styles.signIn}
-                                    onPress={() => {
-                                        this.setState({ showUserEdit: !this.state.showUserEdit })
-                                        // this.props.navigation.navigate('UserStackNavigator')
-                                    }}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
-                                    >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> OK</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
-                        </View>
-                    </View>
-                </Modal>
-
-
-
-                {/* edit item */}
-                <Modal
-                    transparent
-                    visible={this.state.showitemEdit}
-                    animationType="fade"
-                >
-
-                    <View style={{
-                        backgroundColor: "#000000aa",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
-                    }}>
-
-                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
-
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: width - 50,
-                                paddingTop: 20,
-                                alignItems: "center",
-                                height: "39%",
-                                borderRadius: 20
-                            }} >
-
-                            <Text style={{
-                                color: '#000',
-                                width: "86%",
-                                fontSize: 23
-                            }}>
-
-                                 item model
-
-                            </Text>
-
-
-                            <View style={{ marginTop: 50, width: "80%" }}>
-
-                                <TouchableOpacity
-                                    style={styles.signIn}
-                                    onPress={() => {
-                                        this.setState({ showitemEdit: !this.state.showitemEdit })
-                                        // this.props.navigation.navigate('UserStackNavigator')
-                                    }}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
-                                    >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> OK</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
-                        </View>
                     </View>
                 </Modal>
 
@@ -325,73 +127,34 @@ export default class Profile extends Component {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
                 <ScrollView style={{ minHeight: 500 }} nestedScrollEnabled={true}>
-                 
-                    <TouchableOpacity
-                        onPress={this.props.handleLogout}
-
-                    >   
-                    <FontAwesome
-                            name="sign-out"
-                            color='grey'
-                            size={20}
-                            style={{ margin:5,left:320}}
+                  
+                    <View style={styles.header}>
+                        <TouchableOpacity
+                            onPress = { this.props.showUser }
+                         >
+                             
+                        <Icon
+                            name="arrow-back-ios"
+                            size={38}
+                            color="black"
+                            onPress={this.props.show}
                         />
-                    </TouchableOpacity>
+                     </TouchableOpacity>
 
-
+                    </View>
                     {/* image  */}
                     <View style={styles.itemPhotoCont}>
                         <Image
                             source={require("../assets/avatar1.jpeg")}
                             style={styles.itemPhoto}
                         />
-                        <View style={{display:"flex", justifyContent:"center", alignItems:"center" ,flexDirection:"row"}}>
                         <Text
-                            style={styles.text_footer2}
+                            style={styles.text_footer}
                         >
                             Farah Haddar
-                              
                  </Text>
-                      <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({ showUserEdit: !this.state.showUserEdit })
-                                    // this.props.navigation.navigate('UserStackNavigator')
-                                }}
-                      
-                      >
-                        <MaterialCommunityIcons
-                            name="account-edit"
-                            color={Expo.Constants.manifest.extra.COLOR}
-                            size={25}
-                        style={{ marginLeft:14 }}
-                        />
-                    </TouchableOpacity>
-                        </View>
-                     
                     </View>
-
-                    
 
                     {/* dashBoard */}
                     <View style={styles.DashCon} >
@@ -569,9 +332,12 @@ export default class Profile extends Component {
                                 renderItem={({ item }) => (
 
                                     <View style={styles.container}>
-                                    
-                                            {/* {this.setState({ itemId: item.id })} */}
-       
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({ show: !this.state.show, itemId: item.id })
+                                            }}
+
+                                        >
                                             <View style={styles.cardMain} >
 
                                                 <Image
@@ -587,26 +353,22 @@ export default class Profile extends Component {
                                                 <View style={styles.footer}>
                                                     <View style={styles.section}>
                                                         <TouchableOpacity
-                                                        onPress={() => {
-                                                            this.setState({ showitemEdit: !this.state.showitemEdit })
-                                                            // this.props.navigation.navigate('UserStackNavigator')
-                                                        }}
 
                                                         >
-                                                            <MaterialCommunityIcons style={styles.Iconsection} name="circle-edit-outline" size={20} color={Expo.Constants.manifest.extra.COLOR} />
+                                                            <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
+                                                            <Text style={styles.txtsection}> WishList </Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                     <View style={styles.section}>
-                                                        <TouchableOpacity
-                                                        onPress={()=>{this.setState({showDelete:!this.state.showDelete})}}
-                                                        >
-                                                            <MaterialCommunityIcons style={styles.Iconsection} name="delete" size={20} color={Expo.Constants.manifest.extra.RED} />
+                                                        <TouchableOpacity>
+                                                            <FontAwesome style={styles.Iconsection} name="exchange" size={20} color='black' />
+                                                            <Text style={styles.txtsection} > Trade Now! </Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
 
                                             </View>
-                                    
+                                        </TouchableOpacity>
                                     </View>
 
 
@@ -655,7 +417,7 @@ const styles = StyleSheet.create({
     itemPhotoCont: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 4,
     },
     text_footer: {
         color: '#05375a',
@@ -663,20 +425,9 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginRight:5,
+        marginRight: 5,
         fontWeight: "bold",
         padding:2
-    },
-    text_footer2: {
-        color: '#05375a',
-        fontSize: 15,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        // marginTop: 1,
-        marginLeft: 35,
-        fontWeight: "bold",
-        padding: 2
     },
     action: {
         marginRight: 5,
@@ -738,7 +489,7 @@ const styles = StyleSheet.create({
     cardMain: {
         backgroundColor: "white",
         width: 160,
-        height: 250,
+        height: 280,
         borderRadius: 17,
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.7)',
@@ -751,13 +502,13 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
     },
     footer: {
+        marginTop: 7,
         justifyContent: 'space-around',
         display: "flex",
         flexDirection: "row"
     },
     section: {
         margin: 7,
-        marginTop: 0,
         display: "flex",
         flexDirection: "column",
     },
@@ -774,16 +525,10 @@ const styles = StyleSheet.create({
     },
     flat:{
         maxHeight:550,
-    }, signIn: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
     },
-    textSign: {
-        fontSize: 18,
-        fontWeight: 'bold'
+    header: {
+        marginTop: 10,
+        paddingHorizontal: 10,
     },
 
 

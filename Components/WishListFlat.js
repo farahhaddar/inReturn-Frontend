@@ -118,7 +118,10 @@ export default class WishListFlat extends Component {
                                             Item Name
                                 </Text>
 
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                        
+                
+                                        >
                                             <Feather
                                                 name="delete"
                                                 color={Expo.Constants.manifest.extra.RED}

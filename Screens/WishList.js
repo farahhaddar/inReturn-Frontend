@@ -16,8 +16,8 @@ export default class WishList extends Component {
     handleSearch = (text) => {
         this.setState({ search: text })
     }
-
-
+  
+  
 
     render() {
 
