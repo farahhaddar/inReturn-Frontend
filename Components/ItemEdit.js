@@ -26,11 +26,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions'
 import MultiSelect from 'react-native-multiple-select';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const width = Dimensions.get("window").width;
 
 
-export default class AddItem extends Component {
+export default class EditItem extends Component {
 
     constructor(props) {
         super(props);
@@ -47,7 +48,7 @@ export default class AddItem extends Component {
             categoryErr: "",
             descErr: "",
             imageErr: "",
-            exchangeErr:'',
+            exchangeErr: '',
             oldData: [],
 
         };
@@ -59,7 +60,7 @@ export default class AddItem extends Component {
 
 
 
-  
+
 
     // on change of inputs setState
     onChangeValue = (name, text) => {
@@ -96,9 +97,9 @@ export default class AddItem extends Component {
         console.log(result);
 
         if (!result.cancelled) {
-            this.setState({image:result.uri});
+            this.setState({ image: result.uri });
         }
-    
+
     }
 
 
@@ -108,7 +109,7 @@ export default class AddItem extends Component {
         const { cancelled, uri } = await ImagePicker.launchCameraAsync({
             allowsEditing: true
         });
-        this.setState({ image:uri });
+        this.setState({ image: uri });
     };
 
 
@@ -120,7 +121,7 @@ export default class AddItem extends Component {
 
             try {
 
-                fetch(Expo.Constants.manifest.extra.API_URL +"categories", {
+                fetch(Expo.Constants.manifest.extra.API_URL + "categories", {
 
                     method: "GET",
                     headers: {
@@ -144,9 +145,9 @@ export default class AddItem extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.exchangeID +"ExId")
-        console.log(this.state.categoryID+"catId")
-        console.log(this.state.image+"image")
+        console.log(this.state.exchangeID + "ExId")
+        console.log(this.state.categoryID + "catId")
+        console.log(this.state.image + "image")
 
 
 
@@ -255,20 +256,38 @@ export default class AddItem extends Component {
                     </View>
                 </Modal>
 
-                <View style={styles.header}>
-                    <Text style={styles.text_header}> Add New Item !</Text>
-                </View>
 
 
-                <Animatable.View
-                    animation="fadeInUpBig"
-                    style={styles.footer}>
+                <View>
 
                     <SafeAreaView>
 
                         <ScrollView>
+                         
+                            <View >
 
-                            {/* user */}
+                                <TouchableOpacity
+                                    onPress={this.props.showitemEdit}
+                                >
+
+                                    <Icon
+                                        name="arrow-back-ios"
+                                        size={25}
+                                        color="grey"
+                                        style={{ margin: 10, marginTop: 20 }}
+
+                                    />
+                                </TouchableOpacity>
+
+
+                            </View>
+                            <Text
+                                style={{ marginLeft: 90, fontSize: 25, color: Expo.Constants.manifest.extra.COLOR, fontWeight: "bold", margin: 20 }}
+                            > Edit Item </Text>
+
+
+
+                            {/* item */}
                             <Text style={styles.errorSingUp}> {this.state.nameErr}</Text>
                             <Text
                                 style={styles.text_footer}
@@ -325,7 +344,7 @@ export default class AddItem extends Component {
                             <View>
 
                                 <Text
-                                    style={[styles.text_footer, {marginBottom: 20 }]}>
+                                    style={[styles.text_footer, { marginBottom: 20 }]}>
 
                                     Exchange Categories:</Text>
 
@@ -333,22 +352,22 @@ export default class AddItem extends Component {
 
                                 {this.state.categoryData.length > 0 ?
 
-                                <View style={{ borderWidth: 2, borderColor: Expo.Constants.manifest.extra.COLOR, borderRadius: 15 }}>
-                                    <Picker
+                                    <View style={{ borderWidth: 2, borderColor: Expo.Constants.manifest.extra.COLOR, borderRadius: 15 }}>
+                                        <Picker
                                             style={{ color: "#666666" }}
                                             selectedValue={this.state.categoryID}
                                             onValueChange={this.updateCategoryId}
                                         >
 
-                                    <Picker.defaultValue label="Choose Category" ></Picker.defaultValue>
-                                    {this.state.categoryData.map((data) => (
-                                    <Picker.Item label={data.name} value={data.id} />
-                                    ))}
+                                            <Picker.defaultValue label="Choose Category" ></Picker.defaultValue>
+                                            {this.state.categoryData.map((data) => (
+                                                <Picker.Item label={data.name} value={data.id} />
+                                            ))}
 
-                                    </Picker>
-                                </View>
+                                        </Picker>
+                                    </View>
 
-                                :
+                                    :
                                     <Text></Text>
                                 }
 
@@ -356,31 +375,31 @@ export default class AddItem extends Component {
 
                             {/* exchange Categories */}
                             <View>
-                            <Text
-                                style={[styles.text_footer, { marginTop: 15, marginBottom: 20 }]}>
+                                <Text
+                                    style={[styles.text_footer, { marginTop: 15, marginBottom: 20 }]}>
 
-                                Item Category:</Text>
+                                    Item Category:</Text>
 
-                            <MultiSelect
-                                hideTags
-                                items={this.state.categoryData}
-                                uniqueKey="id"
-                                onSelectedItemsChange={this.updateExchangeId}
-                                selectedItems={this.state.exchangeID}
-                                selectText="Select Categories"
-                                searchInputPlaceholderText="Search Items..."
-                                onChangeInput={(text) => console.log(text)}
-                                displayKey="name"
-                                searchInputStyle={{ color: '#CCC' }}
-                                submitButtonColor={Expo.Constants.manifest.extra.COLOR}
-                                submitButtonText="Submit"
-                            />
+                                <MultiSelect
+                                    hideTags
+                                    items={this.state.categoryData}
+                                    uniqueKey="id"
+                                    onSelectedItemsChange={this.updateExchangeId}
+                                    selectedItems={this.state.exchangeID}
+                                    selectText="Select Categories"
+                                    searchInputPlaceholderText="Search Items..."
+                                    onChangeInput={(text) => console.log(text)}
+                                    displayKey="name"
+                                    searchInputStyle={{ color: '#CCC' }}
+                                    submitButtonColor={Expo.Constants.manifest.extra.COLOR}
+                                    submitButtonText="Submit"
+                                />
                             </View>
-                           
 
 
 
-                               
+
+
 
                             {/* Image Picker */}
 
@@ -397,16 +416,16 @@ export default class AddItem extends Component {
                                 <View style={styles.container2}>
                                     <Image style={styles.image} source={{ uri: this.state.image }} />
                                     <View style={styles.row}>
-                                      
+
                                         <TouchableOpacity
                                             onPress={this.selectPicture}
                                         >
-                                        <MaterialCommunityIcons
-                                            name="image"
-                                            color={Expo.Constants.manifest.extra.COLOR}
-                                            size={35}
-                                            style={{margin:20}}
-                                        />
+                                            <MaterialCommunityIcons
+                                                name="image"
+                                                color={Expo.Constants.manifest.extra.COLOR}
+                                                size={35}
+                                                style={{ margin: 20 }}
+                                            />
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={this.takePicture}
@@ -446,7 +465,7 @@ export default class AddItem extends Component {
                                     >
                                         <Text style={[styles.textSign, {
                                             color: '#fff'
-                                        }]}> Submit</Text>
+                                        }]}> Edit </Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
                             </View>
@@ -454,7 +473,7 @@ export default class AddItem extends Component {
 
                         </ScrollView>
                     </SafeAreaView>
-                </Animatable.View>
+                </View>
             </View>
         )
     }
@@ -472,7 +491,8 @@ export default class AddItem extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Expo.Constants.manifest.extra.COLOR,
+        justifyContent: "center",
+        paddingHorizontal: 20,
     },
     header: {
         flex: 0.2,
@@ -537,7 +557,8 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 10,
+        marginBottom:15,
     },
     textSign: {
         fontSize: 18,
@@ -550,15 +571,15 @@ const styles = StyleSheet.create({
         fontSize: 12
 
     },
-    row: { 
+    row: {
         flexDirection: 'row'
-     },
+    },
 
     image: {
-         width: 200, 
-         height: 200, 
-         backgroundColor: 'rgba(0,0,0,0.1)'
-         },
+        width: 200,
+        height: 200,
+        backgroundColor: 'rgba(0,0,0,0.1)'
+    },
     button2: {
         padding: 13,
         margin: 15,

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Text, FlatList, Modal, StatusBar, ActivityIndicator,StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, FlatList, Modal, StatusBar, ActivityIndicator, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ItemDetails from '../Screens/ItemDetails';
-
+import SendOffer from './SendOffer'
 
 
 
@@ -12,8 +12,9 @@ export default class Flatlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show:false,
-            itemId:"",
+            show: false,
+            showTrade: false,
+            itemId: "",
             data: [
                 {
                     name: "farah",
@@ -39,24 +40,29 @@ export default class Flatlist extends Component {
 
             ]
         }
-    } 
-   
-   handleItem=()=>{
-       this.setState({ show: !this.state.show })
-   }
+    }
+
+    handleItem = () => {
+        this.setState({ show: !this.state.show })
+    }
+
+    handleTrade = () => {
+        this.setState({ showTrade: !this.state.showTrade })
+    }
 
 
     render() {
-       
+
 
         return (
-          
-            
+
+
             <ScrollView
                 contentContainerStyle={styles.contentContainer}
                 style={styles.flat}
             >
 
+                {/* item detail page */}
                 <Modal
                     transparent
                     visible={this.state.show}
@@ -64,19 +70,32 @@ export default class Flatlist extends Component {
                 >
                     <View style={{
                         backgroundColor: "white",
-                        flex: 1, 
+                        flex: 1,
                     }}>
-                        <TouchableOpacity 
-                            onPress={() => {
-                               this.handleItem
-
-                            }}
-                        >
         
-                        </TouchableOpacity>
-                        <ItemDetails  itemId={this.state.itemId} show={this.handleItem}/>
+                        <ItemDetails itemId={this.state.itemId} show={this.handleItem} />
 
-          
+
+                    </View>
+                </Modal>
+
+
+                {/* trade model */}
+                <Modal
+                    transparent
+                    visible={this.state.showTrade}
+                    animationType="fade"
+                >
+                    <View style={{
+                        backgroundColor: "white",
+                        flex: 1,
+                    }}>
+                       
+                      
+                        <SendOffer itemId={this.state.itemId} handleTrade={this.handleTrade} />
+                       
+                      
+
                     </View>
                 </Modal>
 
@@ -98,41 +117,45 @@ export default class Flatlist extends Component {
                         <View style={styles.container}>
                             <TouchableOpacity
                                 onPress={() => {
-                                   this.setState({show:!this.state.show,itemId:item.id})
+                                    this.setState({ show: !this.state.show, itemId: item.id })
                                 }}
-                            
-                            >
-                            <View style={styles.cardMain} >
-                               
-                                <Image
-                                    style={{ width:'auto', height: 150, marginBottom: 15,borderTopRightRadius:15,borderTopLeftRadius:15 }}
-                                    source={require("../assets/avatar1.jpeg")}
-                                />
-                                
 
-                               
+                            >
+                                <View style={styles.cardMain} >
+
+                                    <Image
+                                        style={{ width: 'auto', height: 150, marginBottom: 15, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}
+                                        source={require("../assets/avatar1.jpeg")}
+                                    />
+
+
+
                                     <Text style={styles.title}> {item.name} </Text>
-                               
+
 
                                     <View style={styles.footer}>
-                                    <View style={styles.section}>
-                                        <TouchableOpacity
-                                               
-                                        
-                                        >
-                                        <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
-                                        <Text style={styles.txtsection}> WishList </Text>
-                                        </TouchableOpacity>
+                                        <View style={styles.section}>
+                                            <TouchableOpacity
+
+
+                                            >
+                                                <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
+                                                <Text style={styles.txtsection}> WishList </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.section}>
+                                            <TouchableOpacity
+                                                onPress={
+                                                    this.handleTrade}
+                                            
+                                            >
+                                                <FontAwesome style={styles.Iconsection} name="exchange" size={20} color='black' />
+                                                <Text style={styles.txtsection} > Trade Now! </Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                    <View style={styles.section}>
-                                        <TouchableOpacity>
-                                        <FontAwesome style={styles.Iconsection} name="exchange" size={20} color='black' />
-                                        <Text style={styles.txtsection} > Trade Now! </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    </View>
-                               
-                            </View>
+
+                                </View>
                             </TouchableOpacity>
                         </View>
 
@@ -140,9 +163,9 @@ export default class Flatlist extends Component {
                     )}
 
                 />
-    
+
             </ScrollView>
-            
+
 
 
         )
@@ -167,32 +190,32 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.7)',
     },
-    title:{
-       fontSize:20,
-       fontWeight:"bold",
-       textAlign:"center",
-        flex: 1, 
+    title: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+        flex: 1,
         flexWrap: 'wrap'
     },
-    footer:{
-    marginTop: 7,
-    justifyContent: 'space-around',
-     display:"flex",
-     flexDirection:"row"
+    footer: {
+        marginTop: 7,
+        justifyContent: 'space-around',
+        display: "flex",
+        flexDirection: "row"
     },
-    section:{
-        margin:7,
+    section: {
+        margin: 7,
         display: "flex",
         flexDirection: "column",
     },
-     Iconsection:{
-         textAlign:'center',
-         marginBottom:4,
+    Iconsection: {
+        textAlign: 'center',
+        marginBottom: 4,
 
-    }, txtsection:{
-        fontSize:10,
+    }, txtsection: {
+        fontSize: 10,
 
     }
-    
+
 
 })

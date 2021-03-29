@@ -26,6 +26,8 @@ import { Picker } from "@react-native-community/picker";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions'
 import MultiSelect from 'react-native-multiple-select';
+import UserEdit from './UserEdit';
+import ItemEdit from './ItemEdit';
 
 
 const width = Dimensions.get("window").width;
@@ -86,6 +88,16 @@ export default class Profile extends Component {
 
         }
     }
+
+
+    showUserEdit=()=>{
+        this.setState({showUserEdit:!this.state.showUserEdit})
+    }
+
+    showitemEdit= () => {
+        this.setState({ showitemEdit: !this.state.showitemEdit })
+    }
+
 
     render() {
 
@@ -190,58 +202,14 @@ export default class Profile extends Component {
 
                     <View style={{
                         backgroundColor: "white",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
+                        flex: 1,
+                        
+                        
                     }}>
 
                         <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
-
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: width - 50,
-                                paddingTop: 20,
-                                alignItems: "center",
-                                height: "39%",
-                                borderRadius: 20
-                            }} >
-
-                            <Text style={{
-                                color: '#000',
-                                width: "86%",
-                                fontSize: 23
-                            }}>
-
-                                user Model
-
-                            </Text>
-
-
-                            <View style={{ marginTop: 50, width: "80%" }}>
-
-                                <TouchableOpacity
-                                    style={styles.signIn}
-                                    onPress={() => {
-                                        this.setState({ showUserEdit: !this.state.showUserEdit })
-                                        // this.props.navigation.navigate('UserStackNavigator')
-                                    }}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
-                                    >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> OK</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
-                        </View>
+                          
+                            <UserEdit showUserEdit={this.showUserEdit}/>
                     </View>
                 </Modal>
 
@@ -255,59 +223,14 @@ export default class Profile extends Component {
                 >
 
                     <View style={{
-                        backgroundColor: "#000000aa",
-                        flex: 1, alignItems: "center",
-                        justifyContent: 'center'
+                        backgroundColor: "white",
+                        flex: 1
                     }}>
 
                         <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
 
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: width - 50,
-                                paddingTop: 20,
-                                alignItems: "center",
-                                height: "39%",
-                                borderRadius: 20
-                            }} >
-
-                            <Text style={{
-                                color: '#000',
-                                width: "86%",
-                                fontSize: 23
-                            }}>
-
-                                 item model
-
-                            </Text>
-
-
-                            <View style={{ marginTop: 50, width: "80%" }}>
-
-                                <TouchableOpacity
-                                    style={styles.signIn}
-                                    onPress={() => {
-                                        this.setState({ showitemEdit: !this.state.showitemEdit })
-                                        // this.props.navigation.navigate('UserStackNavigator')
-                                    }}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
-                                    >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> OK</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
-                        </View>
+                     <ItemEdit  showitemEdit={this.showitemEdit}/>
+                      
                     </View>
                 </Modal>
 
