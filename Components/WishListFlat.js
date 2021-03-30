@@ -10,36 +10,48 @@ export default class WishListFlat extends Component {
         this.state = {
             show: "",
             itemId: "",
-
             data: [
                 {
-                    name: "farah",
+                    name: "Cat Bed",
                     id: "1",
-                    dets: 'hello beautiful people how are u doing'
+                    date: "2021/3/29",
+                    image: require("../assets/cats.jpeg"),
+                    dets:" Cats White Bed"
                 },
                 {
-                    name: "ali",
+                    name: "Tshirt",
                     id: "2",
-                    dets: 'hello beautiful people how are u doing'
+                    date: "2021/3/3",
+                    image: require("../assets/shirt.jpeg"),
+                    dets:" new Tshirt "
                 },
                 {
-                    name: "hsen",
+                    name: "Lamp",
                     id: "3",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "hassan",
-                    id: "4",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "khaldoun",
-                    id: "6",
-                    dets: 'hello beautiful people how are u doing'
-                },
+                    image: require("../assets/Lamp.jpeg"),
+                    date: "2021/2/4",
+                    dets:" Classic 6W Led b"
 
+                },
+                {
+                    name: "Cans",
+                    id: "4",
+                    image: require("../assets/food.jpeg"),
+                    date: "2021/3/5",
+                    dets:"expiry in 4 months"
+                },
+                {
+                    name: "Phones",
+                    id: "6",
+                    image: require("../assets/phones.jpeg"),
+                    date: "2021/3/5",
+                    dets:" New Phone",
+
+                }
 
             ]
+
+            
         }
     }
 
@@ -107,7 +119,7 @@ export default class WishListFlat extends Component {
 
                                 <View style={styles.wrapperPhoto}>
                                     <Image
-                                        source={require("../assets/avatar1.jpeg")}
+                                        source={item.image}
                                         style={styles.itemPhoto}
                                         resizeMode="cover"
                                     />
@@ -115,7 +127,7 @@ export default class WishListFlat extends Component {
                                 <View>
                                     <View style={styles.itemBtn}>
                                         <Text style={styles.itemName}>
-                                            Item Name
+                                            {item.name}
                                 </Text>
 
                                         <TouchableOpacity
@@ -130,7 +142,7 @@ export default class WishListFlat extends Component {
                                         </TouchableOpacity>
 
                                     </View>
-                                    <Text style={styles.itemDate}>2021/3/29</Text>
+                                    <Text style={styles.itemDate}>{item.date}</Text>
                                     <Text style={styles.itemdata}>
                                         {this.handleDets(item.dets)}
                                     </Text>

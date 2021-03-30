@@ -152,7 +152,7 @@ export default class VisitProfile extends Component {
                         <Text
                             style={styles.text_footer}
                         >
-                            Farah Haddar
+                          Johne Doe
                  </Text>
                     </View>
 
@@ -163,7 +163,7 @@ export default class VisitProfile extends Component {
                          Posts   
                         </Text>
                             <Text style={styles.DashConNb}>
-                          200 
+                          4
                         </Text>
 
 
@@ -174,7 +174,7 @@ export default class VisitProfile extends Component {
                         </Text>
                             <Text style={styles.DashConNb}>
 
-                                200
+                                2
                         </Text>
 
 
@@ -208,7 +208,7 @@ export default class VisitProfile extends Component {
                     </Text>
                     
                     <Text style={styles.contdata}>
-                            farah.haddar99@gmail.com
+                            Johne@gmail.com
                     </Text>
                     </View>
 
@@ -234,7 +234,7 @@ export default class VisitProfile extends Component {
                   
                     </Text>
                         <Text style={styles.contdata}>
-                            78813214
+                            01111111
                         </Text>
                     </View>
 
@@ -259,7 +259,7 @@ export default class VisitProfile extends Component {
                         City :
                         </Text>
                         <Text style={styles.contdata}>
-                            Beirut
+                            Tyre
                            </Text>
                     </View>
 
@@ -281,7 +281,7 @@ export default class VisitProfile extends Component {
                         </Text>
 
                         <Text style={styles.contdata}>
-                            Chiah
+                            XYZ st
                          </Text>
                     </View>
 
@@ -303,7 +303,7 @@ export default class VisitProfile extends Component {
                      Address Details:
                      </Text>
                         <Text style={styles.contdata}>
-                            Near bla bla bla
+                            Near ABC Mall
                     </Text>
                     </View>
                     

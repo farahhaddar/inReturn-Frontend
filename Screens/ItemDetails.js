@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import VisitProfile from '../Components/VisitProfile';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 
@@ -30,6 +31,29 @@ export default class ItemDetails extends Component {
       this.state = {
           showUser:false,
           userId:'',
+          data:[
+              {
+                  name: "Pets",
+                  id: "1",
+                  icon_name:'cat',
+                 
+              },
+              {
+                  name: "Arts",
+                  id: "1",
+                  icon_name: "music",
+
+              },
+              {
+                  name: "Fashion",
+                  id: "1",
+                  icon_name:"tshirt-crew",
+
+              },
+
+          ]
+
+          
       }
   }
 
@@ -70,7 +94,7 @@ export default class ItemDetails extends Component {
                  {/* backGround item image */}
 
                 <ImageBackground style={{ flex: 0.5 }}
-                    source={require("../assets/avatar1.jpeg")}
+                    source={require("../assets/Lamp.jpeg")}
                 >
 
                      {/* go back button button */}
@@ -90,15 +114,15 @@ export default class ItemDetails extends Component {
                     <View style={style.imageDetails}>
                         <Text
                             style={{
-                                width: '100%',
+                                width: '70%',
                                 fontSize: 25,
                                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                                 fontWeight: 'bold',
                                 color: "white",
-                                paddingLeft:20,
+                                paddingLeft:40,
                                 marginBottom: 0,
                             }}>
-                              farah Haddarrrr
+                              Light Lamp
                        </Text>
                     </View>
 
@@ -112,11 +136,11 @@ export default class ItemDetails extends Component {
                       {/* add to wishlist button */}
 
                     <View style={style.iconContainer}>
-                        <Icon name="favorite" color="black" size={22} />
+                        <Icon name="favorite" color="red" size={22} />
                     </View>
 
 
-                    <ScrollView>
+                    <ScrollView nestedScrollEnabled={true}>
                           
                            {/* user name and image */}
                         <TouchableOpacity onPress={() => {
@@ -138,7 +162,7 @@ export default class ItemDetails extends Component {
                                     fontWeight: 'bold',
                                     color: "black",
                                 }}>
-                                 User Name
+                                 Johen Doe
                             </Text>
                            
                         </View>
@@ -156,7 +180,7 @@ export default class ItemDetails extends Component {
                         <View>
                         <Text style={{ marginTop: 20, fontWeight: 'bold', fontSize: 20 }}>
                             Category :  
-                            <Text style={{ fontSize: 15, fontWeight: 'normal'}}> Category Name</Text>
+                            <Text style={{ fontSize: 15, fontWeight: 'normal'}}> House Hold</Text>
                         </Text>
                         </View>
 
@@ -166,8 +190,8 @@ export default class ItemDetails extends Component {
                         Description:
                         </Text>
                             <Text style={{ marginTop: 10, fontSize: 15, fontWeight: 'normal' }}>
-                            Category Name
-                            
+                                Classic Lamp 6W Led bulb is included.
+                                 
                             </Text>
 
                         </View>
@@ -179,24 +203,23 @@ export default class ItemDetails extends Component {
                                 Exchange Category: 
                                 </Text>
 
-                            {/* <View style={style.catContainer}>
-                                <ScrollView horizontal={true} >
-                                    {this.state.categories.length > 0 ?
+                            <View style={style.catContainer}>
+                                <ScrollView nestedScrollEnabled={true} horizontal={true}  >
+                                    {
 
-                                        this.state.categories.map((data) => (
+                                        this.state.data.map((data) => (
 
-                                            <View style={styles.categoryContainer} >
+                                            <View style={style.categoryContainer} >
                                                 <View style={style.categoryIcon}>
                                                     <MaterialCommunityIcons name={data.icon_name} size={30} color='black' />
                                                 </View>
                                                 <Text style={style.categoryBtnTxt}>{data.name}</Text>
                                             </View>
                                         ))
-                                        :
-                                        <Text></Text>
+                                        
                                     }
                                 </ScrollView>
-                            </View> */}
+                            </View> 
 
                         </View> 
 
@@ -321,11 +344,11 @@ const style = StyleSheet.create({
     catContainer: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     categoryContainer: {
         flexDirection: 'column',
-        width: '10%',
+        width: '34%',
         alignSelf: 'center',
         marginTop: 15,
         marginBottom: 10,

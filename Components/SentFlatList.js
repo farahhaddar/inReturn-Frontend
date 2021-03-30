@@ -9,46 +9,57 @@ export default class SentFlatList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
             data: [
                 {
-                    name: "farah",
+                    name: "Cat Bed",
                     id: "1",
-                    dets: 'hello beautiful people how are u doing'
+                    username: "Hadi",
+                    date: "2021/3/29",
+                    image: require("../assets/cats.jpeg"),
+                    color:"#98B82A",
+                    status:"Yay"
                 },
                 {
-                    name: "ali",
+                    name: "Tshirt",
                     id: "2",
-                    dets: 'hello beautiful people how are u doing'
+                    username: "Hassan",
+                    date: "2021/3/3",
+                    image: require("../assets/shirt.jpeg"),
+                    color: "red",
+                    status: "Nay"
                 },
                 {
-                    name: "hsen",
+                    name: "Lamp",
                     id: "3",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "hassan",
-                    id: "4",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "khaldoun",
-                    id: "6",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "khaldoun",
-                    id: "6",
-                    dets: 'hello beautiful people how are u doing'
-                },
-                {
-                    name: "khaldoun",
-                    id: "6",
-                    dets: 'hello beautiful people how are u doing'
-                },
+                    image: require("../assets/Lamp.jpeg"),
+                    username: "Johne Doe",
+                    date: "2021/3/30",
+                    color: "black",
+                    status:"Pending"
 
+                },
+                {
+                    name: "Cans",
+                    id: "4",
+                    image: require("../assets/food.jpeg"),
+                    username: "Samar",
+                    date: "2021/3/5",
+                    color: "red",
+                    status: "Nay"
+                },
+                {
+                    name: "Phones",
+                    id: "6",
+                    image: require("../assets/phones.jpeg"),
+                    username: "Khaldoun",
+                    date: "2021/3/5",
+                    color: "#98B82A",
+                    status:"Yay"
+
+                }
 
             ]
+
         }
     }
 
@@ -73,7 +84,7 @@ export default class SentFlatList extends Component {
                             <View style={styles.wrapper}>
                                 <View style={styles.wrapperPhoto}>
                                     <Image
-                                        source={require("../assets/avatar1.jpeg")}
+                                        source={item.image}
                                         style={styles.itemPhoto}
                                         resizeMode="cover"
                                     />
@@ -82,7 +93,7 @@ export default class SentFlatList extends Component {
 
                                     <View style={styles.itemBtn}>
                                         <Text style={styles.itemName}>
-                                            Offer Name
+                                            {item.name}
                                        </Text>
 
                                         <TouchableOpacity>
@@ -96,10 +107,10 @@ export default class SentFlatList extends Component {
                                     </View>
 
                                     <Text style={styles.itemdata}>
-                                        To:<Text style={styles.itemdata}> user Name</Text>
+                                        To:<Text style={styles.itemdata}>{item.username}</Text>
                                     </Text>
                                     <Text style={styles.itemDate}>
-                                        Sent On: 2021/3/29
+                                        Sent On: {item.date}
                                 </Text>
                                 </View>
                             </View>
@@ -108,38 +119,40 @@ export default class SentFlatList extends Component {
 
                                 <Text style={styles.emoticonquest}> Status: </Text>
 
-        
+                                 {item.status=="Yay"?
                                     <View style={styles.emoticontext}>
                                         <Text > Yay </Text>
                                         <MaterialCommunityIcons
                                             name="emoticon-happy"
-                                        color="#98B82A"
+                                        color={item.color}
                                             size={20}
                                         />
                                     </View>
+                                    : 
+                                    item.status=="Nay"?
 
-                                {/* <View style={styles.emoticontext}>
-                                    <Text> Pending </Text>
+                                 <View style={styles.emoticontext}>
+                                    <Text>  Nay</Text>
                                     <MaterialCommunityIcons
-                                        name="emoticon-neutral"
-                                        color="black"
+                                        name="emoticon-sad"
+                                        color={item.color}
                                         size={20}
                                     />
                                 </View>
                                 
-
+                                 :
                                 
                                 
                                     <View style={styles.emoticontext}>
-                                        <Text>Nay</Text>
+                                        <Text> Pending</Text>
                                         <MaterialCommunityIcons
-                                            name="emoticon-sad"
+                                            name="emoticon-neutral"
                                             color="black"
                                             size={20}
                                         />
-                                    </View> */}
+                                    </View> 
                                
-
+                                }
 
                             </View>
 

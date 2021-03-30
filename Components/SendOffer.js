@@ -13,6 +13,8 @@ import {
     StatusBar,
     ActivityIndicator,
     Alert,
+    FlatList,
+    Linking,
     Modal,
     Button
 } from 'react-native';
@@ -38,9 +40,27 @@ export default class EditItem extends Component {
         this.state = {
             isLoading: false,
             show: false,
+            success:false,
+            userItems: [],
             exchangeID: [],
             exchangeErr: '',
-           
+            data: [
+                {
+                    name: "Phone",
+                    id: "1",
+                    date: "2021/3/29",
+                    image: require("../assets/phones.jpeg"),
+                    dets: " New Phone"
+                },
+                {
+                    name: "Tshirt",
+                    id: "2",
+                    date: "2021/3/3",
+                    image: require("../assets/shirt.jpeg"),
+                    dets: " new Tshirt "
+                },
+            ]
+
 
         };
     }
@@ -48,11 +68,45 @@ export default class EditItem extends Component {
 
 
 
+    handleDets = (dets) => {
+        var x = dets;
+        var y = x.split(' ').slice(0, 3).join(' ');
+        return y + "...";
 
+    }
     // exchange items select
     updateExchangeId = (e) => {
         this.setState({ exchangeID: e });
     };
+
+
+    onSubmit = async (e) => {
+        e.preventDefault();
+
+        fetch(Expo.Constants.manifest.extra.API_URL + "offer", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({
+                item_id: this.props.itemId,
+                sender_id: 2,
+                reciver_id: this.props.userItemId,
+                offerItems: this.state.exchangeID,
+            }),
+        }).then((response) => response.text())
+            .then((res) => {
+                this.setState({ showOffer: !this.state.showOffer })
+                console.log(res)
+
+            })
+
+
+    }
+
+
+
 
 
 
@@ -66,7 +120,7 @@ export default class EditItem extends Component {
 
             try {
 
-                fetch(Expo.Constants.manifest.extra.API_URL + "categories", {
+                fetch(Expo.Constants.manifest.extra.API_URL + "user/2", {
 
                     method: "GET",
                     headers: {
@@ -76,7 +130,7 @@ export default class EditItem extends Component {
                 })
                     .then((response) => response.text())
                     .then((res) => {
-                        this.setState({ categoryData: JSON.parse(res).data })
+                        this.setState({ userItems: JSON.parse(res).data.items })
                     });
 
 
@@ -88,13 +142,6 @@ export default class EditItem extends Component {
     }
 
 
-    onSubmit = (e) => {
-        e.preventDefault();
-        console.log(this.state.exchangeID + "ExId")
-        console.log(this.state.categoryID + "catId")
-        console.log(this.state.image + "image")
-
-    }
 
 
 
@@ -131,6 +178,72 @@ export default class EditItem extends Component {
                     </View>
                 </Modal>
 
+                <Modal
+                    transparent
+                    visible={this.state.success}
+                    animationType="fade"
+                >
+
+                    <View style={{
+                        backgroundColor: "#000000aa",
+                        flex: 1, alignItems: "center",
+                        justifyContent: 'center'
+                    }}>
+
+                        <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
+
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                width: width - 70,
+                                paddingTop: 20,
+                                alignItems: "center",
+                                height: "39%",
+                                borderRadius: 20
+                            }} >
+
+                            <Text style={{
+                                color: '#000',
+                                width: "60%",
+                                fontSize: 23
+                            }}>
+
+                                Offer sent Successfully :)
+
+                            </Text>
+
+                           
+
+                            <View style={{ marginLeft:90,marginTop: 100, width: "90%" }}>
+
+                                <TouchableOpacity
+                                    style={styles.signIn}
+
+                                    onPress={() => {
+                                        this.setState({success: !this.state.success })
+                                        this.setState({ show: !this.state.show })
+                                        this.props.handleTrade()
+                                    }}
+
+                                >
+                                    <LinearGradient
+                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
+                                        style={styles.signIn}
+                                    >
+                                        <Text style={[styles.textSign, {
+                                            color: '#fff'
+                                        }]}> OK</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+
+                            </View>
+
+
+
+                        </View>
+                    </View>
+                </Modal>
+
 
 
 
@@ -148,7 +261,146 @@ export default class EditItem extends Component {
                     }}>
 
                         <StatusBar backgroundColor='#000000aa' barStyle="light-content" />
-                        
+
+                        <SafeAreaView>
+
+                            <ScrollView >
+                                <View >
+
+                                    <TouchableOpacity
+                                        onPress={this.props.handleTrade}
+                                    >
+
+                                        <Icon
+                                            name="arrow-back-ios"
+                                            size={25}
+                                            color="grey"
+                                            style={{ margin: 10, marginTop: 20 }}
+
+                                        />
+                                    </TouchableOpacity>
+
+
+                                </View>
+                                <View style={styles.container}>
+
+                                    <Text
+                                        style={{ fontSize: 25, color: Expo.Constants.manifest.extra.COLOR, fontWeight: "bold", marginLeft: 90 }}
+                                    >
+                                        Lamp Offer
+                                   </Text>
+                                    <Image
+                                        source={require("../assets/Lamp.jpeg")}
+                                        style={{ width: "100%", marginTop: 20 }}
+                                        resizeMode="cover"
+                                    />
+
+                                    <View>
+                                        <Text style={{ marginTop: 20, marginBottom: 50, fontSize: 20 }}>
+                                            Hello, I am Farah, I saw your item and I would like to exchange it with the following:
+                                        </Text>
+
+                                        <FlatList
+                                            keyExtractor={(item) => item.id}
+                                            data={this.state.data}
+                                            renderItem={({ item }) => (
+
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        this.setState({ show: !this.state.show, itemId: item.id })
+                                                    }}
+
+                                                    style={styles.wrapper}>
+
+                                                    <View style={styles.wrapperPhoto}>
+                                                        <Image
+                                                            source={item.image}
+                                                            style={styles.itemPhoto}
+                                                            resizeMode="cover"
+                                                        />
+                                                    </View>
+                                                    <View>
+                                                        <View style={styles.itemBtn}>
+                                                            <Text style={styles.itemName}>
+                                                                {item.name}
+                                                            </Text>
+
+                                                            <TouchableOpacity
+
+
+                                                            >
+                                                                <Feather
+                                                                    name="delete"
+                                                                    color={Expo.Constants.manifest.extra.RED}
+                                                                    size={20}
+                                                                />
+                                                            </TouchableOpacity>
+
+                                                        </View>
+                                                        <Text style={styles.itemDate}>{item.date}</Text>
+                                                        <Text style={styles.itemdata}>
+                                                            {this.handleDets(item.dets)}
+                                                        </Text>
+                                                    </View>
+
+                                                </TouchableOpacity>
+
+
+
+
+
+                                            )}
+
+                                        />
+                                           
+                                           <Text style={{marginTop:20,fontSize:20}}>
+                                               If you are  intresed please contact me via whatsapp.
+                                           </Text>
+                                        <Text
+                                            style={{ marginTop: 30,marginLeft:120 }}
+                                            onPress={() => {
+                                                Linking.openURL(
+                                                    'http://api.whatsapp.com/send?phone=961' + 78940942
+                                                );
+                                            }}>
+                                            <MaterialCommunityIcons  name="whatsapp" size={70} color='green' />
+
+                                            </Text>
+
+
+
+                                    </View>
+
+
+
+
+
+                                    {/* button */}
+
+
+                                    <View style={styles.button}>
+                                        <TouchableOpacity style={styles.signIn}
+                                            onPress={(e) => {
+                                                this.setState({ success: !this.state.success})
+                                               
+                                            }
+                                            
+                                            }
+                                        >
+                                            <LinearGradient
+                                                colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
+                                                style={styles.signIn}
+                                            >
+                                                <Text style={[styles.textSign, {
+                                                    color: '#fff'
+                                                }]}> Send Offer </Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </ScrollView>
+                        </SafeAreaView>
 
 
 
@@ -187,52 +439,50 @@ export default class EditItem extends Component {
                             </View>
                             <View style={styles.container}>
 
-                            <Text
-                                style={{fontSize: 25, color: Expo.Constants.manifest.extra.COLOR, fontWeight: "bold", margin: 20 }}
-                            > 
-                            Select Items To Exchange With: 
+                                <Text
+                                    style={{ fontSize: 25, color: Expo.Constants.manifest.extra.COLOR, fontWeight: "bold", margin: 20 }}
+                                >
+                                    Select Items To Exchange With:
                             </Text>
 
 
-                            {/* exchange Categories */}
-                            <View>
- 
-                                <MultiSelect
-                                    hideTags
-                                    items={this.state.categoryData}
-                                    uniqueKey="id"
-                                    onSelectedItemsChange={this.updateExchangeId}
-                                    selectedItems={this.state.exchangeID}
-                                    selectText="Select Categories"
-                                    searchInputPlaceholderText="Search Items..."
-                                    onChangeInput={(text) => console.log(text)}
-                                    displayKey="name"
-                                    searchInputStyle={{ color: '#CCC' }}
-                                    submitButtonColor={Expo.Constants.manifest.extra.COLOR}
-                                    submitButtonText="Submit"
-                                />
-                            </View>
+                                {/* exchange Categories */}
+                                <View>
+
+                                    <MultiSelect
+                                        hideTags
+                                        items={this.state.userItems}
+                                        uniqueKey="id"
+                                        onSelectedItemsChange={this.updateExchangeId}
+                                        selectedItems={this.state.exchangeID}
+                                        selectText="Select Offers"
+                                        searchInputPlaceholderText="Search Items..."
+                                        onChangeInput={(text) => console.log(text)}
+                                        displayKey="name"
+                                        searchInputStyle={{ color: '#CCC' }}
+                                        submitButtonColor={Expo.Constants.manifest.extra.COLOR}
+                                        submitButtonText="Submit"
+                                    />
+                                </View>
 
 
-                            {/* button */}
+                                {/* button */}
 
 
-                            <View style={styles.button}>
-                                <TouchableOpacity style={styles.signIn}
-
-                                    onPress={(e) => this.onSubmit(e)}
-
-                                >
-                                    <LinearGradient
-                                        colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
-                                        style={styles.signIn}
+                                <View style={styles.button}>
+                                    <TouchableOpacity style={styles.signIn}
+                                        onPress={(e) => this.setState({ show: !this.state.show })}
                                     >
-                                        <Text style={[styles.textSign, {
-                                            color: '#fff'
-                                        }]}> Create Offer </Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            </View>
+                                        <LinearGradient
+                                            colors={[Expo.Constants.manifest.extra.SHADE, Expo.Constants.manifest.extra.COLOR]}
+                                            style={styles.signIn}
+                                        >
+                                            <Text style={[styles.textSign, {
+                                                color: '#fff'
+                                            }]}> Create Offer </Text>
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+                                </View>
 
                             </View>
                         </ScrollView>
@@ -270,5 +520,55 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 15,
     },
-   
+    flat: {
+        height: 540,
+    },
+    wrapper: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        textAlign: "left",
+        backgroundColor: "white",
+        shadowColor: "#192a56",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        elevation: 10,
+        padding: 10,
+        marginVertical: 10,
+        marginHorizontal: 5,
+        borderRadius: 15,
+    },
+    itemPhoto: {
+        width: 100,
+        height: 100,
+        borderRadius: 15,
+    },
+    wrapperPhoto: {
+        marginRight: 10,
+    },
+    itemName: {
+        fontWeight: "bold",
+        fontSize: 15,
+        flexWrap: "wrap",
+        width: 200
+    },
+    itemDate: {
+        fontSize: 10,
+        color: "rgba(0, 0, 0, 0.5)",
+        fontStyle: "italic",
+        marginTop: 8,
+    },
+    itemdata: {
+        marginTop: 8,
+        fontStyle: "italic",
+    },
+    itemBtn: {
+        display: 'flex',
+        flexDirection: "row",
+        justifyContent: 'space-around',
+        marginLeft: 3,
+
+    }
+
 });

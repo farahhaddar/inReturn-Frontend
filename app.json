@@ -30,6 +30,7 @@
     },
     "extra": {
       "API_URL": "http://192.168.0.105:8000/api/",
+      "IMAGE":"http://192.168.0.105:8000/storage/",
       "COLOR":"#4E9FFE",
       "SHADE":"#71B3FF",
       "RED":"#EE2C2C"

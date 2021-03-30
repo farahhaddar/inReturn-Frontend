@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ItemDetails from '../Screens/ItemDetails';
 import SendOffer from './SendOffer'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -15,40 +16,96 @@ export default class Flatlist extends Component {
             show: false,
             showTrade: false,
             itemId: "",
-            data: [
-                {
-                    name: "farah",
-                    id: "1"
-                },
-                {
-                    name: "ali",
-                    id: "2"
-                },
-                {
-                    name: "hsen",
-                    id: "3"
-                },
-                {
-                    name: "hassan",
-                    id: "4"
-                },
-                {
-                    name: "khaldoun",
-                    id: "6"
-                },
-
-
-            ]
+            data: [],
+            wishlist:"",
+            userItemId:"",
         }
     }
-
+ 
     handleItem = () => {
         this.setState({ show: !this.state.show })
     }
 
-    handleTrade = () => {
+    handleTrade = (id,item) => {
         this.setState({ showTrade: !this.state.showTrade })
+        this.setState({ userItemId:id});
+        this.setState({ itemId: item});
     }
+
+    wishlist=(id)=>{
+        let i=0;
+        for(;i<this.state.wishlist.length;i++){
+            if (id == this.state.wishlist[i].item_id)
+                break;
+        }
+        if (i== this.state.wishlist.length)
+        return false;
+       
+
+        return true;
+
+    }
+
+    componentDidMount() {
+
+        const request = async () => {
+
+            try {
+
+                fetch(Expo.Constants.manifest.extra.API_URL + "wishLists/2", {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                        "content-type": "application/json"
+                    },
+                })
+                    .then((response) => response.text())
+                    .then((res) => {
+                        this.setState({ wishlist: JSON.parse(res).data })
+                        console.log(JSON.parse(res).data)
+                    });
+
+
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        request();
+    }
+
+
+    addWishList=(id)=>{
+
+        const request = async () => {
+            user = await AsyncStorage.getItem('user')
+            user=JSON.parse(user);
+            userId = user.id;
+
+            try {
+
+                fetch(Expo.Constants.manifest.extra.API_URL + "wishList", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "content-type": "application/json"
+                    }, body: JSON.stringify({
+                        item_id: id,
+                        user_id:userId,
+                    }),
+                })
+                    .then((response) => response.text())
+                    .then((res) => {
+                        this.componentDidMount()
+                    });
+
+
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        request();
+    }
+
 
 
     render() {
@@ -72,7 +129,7 @@ export default class Flatlist extends Component {
                         backgroundColor: "white",
                         flex: 1,
                     }}>
-        
+
                         <ItemDetails itemId={this.state.itemId} show={this.handleItem} />
 
 
@@ -90,11 +147,11 @@ export default class Flatlist extends Component {
                         backgroundColor: "white",
                         flex: 1,
                     }}>
-                       
-                      
-                        <SendOffer itemId={this.state.itemId} handleTrade={this.handleTrade} />
-                       
-                      
+
+
+                        <SendOffer itemId={this.state.itemId} userItemId={this.state.userItemId}  handleTrade={this.handleTrade} />
+
+
 
                     </View>
                 </Modal>
@@ -111,24 +168,25 @@ export default class Flatlist extends Component {
                 <FlatList
                     keyExtractor={(item) => item.id}
                     numColumns={2}
-                    data={this.state.data}
+                    data={this.props.data}
                     renderItem={({ item }) => (
 
                         <View style={styles.container}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.setState({ show: !this.state.show, itemId: item.id })
+                                    this.setState({ show: !this.state.show ,itemId: item.id })
                                 }}
 
                             >
                                 <View style={styles.cardMain} >
-
-                                    <Image
+                                        
+                                   
+                                       <Image
                                         style={{ width: 'auto', height: 150, marginBottom: 15, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}
-                                        source={require("../assets/avatar1.jpeg")}
+
+                                        source={{ uri: Expo.Constants.manifest.extra.IMAGE+item.image }}
                                     />
-
-
+                                   
 
                                     <Text style={styles.title}> {item.name} </Text>
 
@@ -136,18 +194,24 @@ export default class Flatlist extends Component {
                                     <View style={styles.footer}>
                                         <View style={styles.section}>
                                             <TouchableOpacity
-
+                                                onPress={() => {
+                                                    this.addWishList(item.id)
+                                                }}
 
                                             >
-                                                <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
+                                                {this.wishlist(item.id)?
+                                                <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='red' />
+                                                :
+                                               <MaterialCommunityIcons style={styles.Iconsection} name="heart" size={20} color='black' />
+
+                                         }
                                                 <Text style={styles.txtsection}> WishList </Text>
                                             </TouchableOpacity>
                                         </View>
                                         <View style={styles.section}>
                                             <TouchableOpacity
-                                                onPress={
-                                                    this.handleTrade}
-                                            
+                                                onPress={() => { this.handleTrade(item.users.id,item.id)}}
+                
                                             >
                                                 <FontAwesome style={styles.Iconsection} name="exchange" size={20} color='black' />
                                                 <Text style={styles.txtsection} > Trade Now! </Text>
